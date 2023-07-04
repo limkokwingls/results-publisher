@@ -1,6 +1,7 @@
 from types import NoneType
 
 import openpyxl
+from models import Program
 from openpyxl.cell.cell import Cell
 from openpyxl.styles import Alignment, Border, Font, PatternFill, Side
 from openpyxl.utils.dataframe import dataframe_to_rows
@@ -71,19 +72,38 @@ def read_excel_marks(sheet: Worksheet):
             cell: Cell = sheet.cell(student_col, mark_col)
             mark_value = None
             if is_number(cell.value):
-                mark_value = float(cell.value)
+                mark_value = float(cell.value)  # type: ignore
                 data.append({course_code: mark_value})
         results[student_number] = data
 
     return results  # convert_list_to_dict(results)
 
 
+def read_program(sheet: Worksheet):
+    faculty = ""
+    program_index = -1
+    for i, row in enumerate(sheet.iter_rows()):
+        for _cell in row:
+            cell: Cell = _cell
+            if cell.data_type == "s" and "faculty" in str(cell.value).lower():
+                program_index = i + 1
+                faculty = str(cell.value)
+
+    program_row = list(sheet.iter_rows())[program_index]
+    program_name = str(program_row[0].value)
+
+    return Program(name=program_name, faculty=faculty)
+
+
 def main():
     workbook: Workbook = openpyxl.load_workbook("test.xlsx")
     for i, ws in enumerate(workbook):
         sheet: Worksheet = ws
-        marks = read_excel_marks(sheet)
-        print(marks)
+        program = read_program(sheet)
+        # marks = read_excel_marks(sheet)
+        print(program)
+
+        # print(marks)
         exit()
 
 
