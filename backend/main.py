@@ -1,3 +1,4 @@
+import os
 from types import NoneType
 
 import openpyxl
@@ -12,6 +13,9 @@ from rich import print
 from rich.console import Console
 
 console = Console()
+Base.metadata.create_all(engine)
+session = Session()
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 
 def to_int(value):
@@ -155,20 +159,29 @@ def create_student_class(sheet: Worksheet):
     return student_class
 
 
-Base.metadata.create_all(engine)
-session = Session()
+def get_data_files(dir: str):
+    files = []
+    dir = os.path.join(BASE_DIR, dir)
+    for file in os.listdir(dir):
+        if file.endswith(".xlsx"):
+            files.append(os.path.join(dir, file))
+    return files
 
 
 def main():
-    workbook: Workbook = openpyxl.load_workbook("test.xlsx")
-    for i, ws in enumerate(workbook):
-        sheet: Worksheet = ws
-        with console.status(
-            f"{i + 1}/{len(workbook.worksheets)} Processing '{sheet.title}'..."
-        ):
-            student_class = create_student_class(sheet)
-            save_student_grades(sheet, student_class)
-        print("Done!")
+    files = get_data_files("data")
+    for i, file in enumerate(files):
+        file_name = file.split("\\")[-1]
+        print(f"{i+1}/{len(files)}) {file_name}")
+        workbook: Workbook = openpyxl.load_workbook(file)
+        for i, ws in enumerate(workbook):
+            sheet: Worksheet = ws
+            with console.status(
+                f"{i + 1}/{len(workbook.worksheets)} Processing '{sheet.title}'..."
+            ):
+                student_class = create_student_class(sheet)
+                save_student_grades(sheet, student_class)
+    print("Done!")
 
 
 if __name__ == "__main__":
