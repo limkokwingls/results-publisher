@@ -120,27 +120,14 @@ session = Session()
 
 
 def main():
-    programs = []
-    classes = []
     grades = []
 
     workbook: Workbook = openpyxl.load_workbook("test.xlsx")
     for i, ws in enumerate(workbook):
         sheet: Worksheet = ws
-        student_class = create_student_class(sheet)
-        print(student_class)
-        # marks = read_student_grades(sheet)
-
-        # print(program)
-
-        # print(marks)
-        # exit()
-
-    print(programs)
-    print(classes)
-
-    # session.add_all(programs)
-    # session.commit()
+        marks = read_student_grades(sheet)
+        print(marks)
+        exit()
 
 
 if __name__ == "__main__":
