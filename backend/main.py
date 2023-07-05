@@ -168,7 +168,17 @@ def get_data_files(dir: str):
     return files
 
 
+def delete_everything():
+    session.query(CourseGrade).delete()
+    session.query(Student).delete()
+    session.query(StudentClass).delete()
+    session.query(Program).delete()
+    session.commit()
+
+
 def main():
+    with console.status("Clearing database..."):
+        delete_everything()
     files = get_data_files("data")
     for i, file in enumerate(files):
         file_name = file.split("\\")[-1]
