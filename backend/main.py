@@ -57,13 +57,24 @@ def get_course_rows(sheet: Worksheet):
             cell: Cell = c
             if cell.value == "Mk":
                 col_i = cell.col_idx
-                row_i = cell.row
-                code_cell: Cell = sheet.cell(row_i - 2, col_i)
-                name_cell: Cell = sheet.cell(row_i - 8, col_i)
+                mk_label_i = cell.row  # The row index for "MK"
+                code_cell: Cell = sheet.cell(mk_label_i - 2, col_i)
+                name = None
+                i = 3
+                try:
+                    while i < 10:
+                        name_cell = sheet.cell(mk_label_i - i, col_i)
+                        name = name_cell.value
+                        if name:
+                            break
+                        i += 1
+                except Exception as e:
+                    print(e)
+
                 # courses[grade_cell.value] = grade_cell.column
                 courses[code_cell.column] = {
                     "code": code_cell.value,
-                    "name": name_cell.value,
+                    "name": name,
                 }
     return courses
 
@@ -195,4 +206,4 @@ def main():
 
 
 if __name__ == "__main__":
-    print(main())
+    main()
