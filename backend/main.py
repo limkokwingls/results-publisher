@@ -2,7 +2,7 @@ from types import NoneType
 
 import openpyxl
 from base import Base, Session, engine
-from models import Program, Student, StudentClass
+from models import CourseGrade, Program, Student, StudentClass
 from openpyxl.cell.cell import Cell
 from openpyxl.styles import Alignment, Border, Font, PatternFill, Side
 from openpyxl.utils.dataframe import dataframe_to_rows
@@ -84,14 +84,26 @@ def read_student_grades(sheet: Worksheet):
 
     results = {}
     for student_col in students:
-        student_number = to_int(students[student_col])
+        student_number = to_int(students[student_col].number)
         data = []
         for mark_col, course_code in marks_dict.items():
-            cell: Cell = sheet.cell(student_col, mark_col)
-            mark_value = None
-            if is_number(cell.value):
-                mark_value = float(cell.value)  # type: ignore
-                data.append({course_code: mark_value})
+            marks_cell: Cell = sheet.cell(student_col, mark_col)
+            grade_cell: Cell = sheet.cell(student_col, mark_col + 1)
+            points_cell: Cell = sheet.cell(student_col, mark_col + 2)
+            if is_number(marks_cell.value):
+                marks = float(str(marks_cell.value))
+                grade = str(grade_cell.value)
+                points = float(str(points_cell.value))
+                data.append(
+                    CourseGrade(
+                        code=course_code,
+                        marks=marks,
+                        grade=grade,
+                        points=points,
+                        student_id=None,
+                        name=None,
+                    )
+                )
         results[student_number] = data
 
     return results
@@ -142,7 +154,7 @@ def main():
     workbook: Workbook = openpyxl.load_workbook("test.xlsx")
     for i, ws in enumerate(workbook):
         sheet: Worksheet = ws
-        students = get_course_rows(sheet)
+        students = read_student_grades(sheet)
         print(students)
 
 
