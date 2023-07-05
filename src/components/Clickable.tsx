@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 type Props = {
   href: string;
   text: string;
@@ -5,11 +7,9 @@ type Props = {
 
 export default function Clickable({ href, text }: Props) {
   return (
-    <a
+    <Link
       href={`${href}`}
       className='group rounded-lg border dark:border-zinc-900 px-10 py-8 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30'
-      target='_blank'
-      rel='noopener noreferrer'
     >
       <h2 className={`text-xl font-semibold`}>
         {text}{' '}
@@ -17,6 +17,6 @@ export default function Clickable({ href, text }: Props) {
           -&gt;
         </span>
       </h2>
-    </a>
+    </Link>
   );
 }
