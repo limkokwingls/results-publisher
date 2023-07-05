@@ -99,9 +99,9 @@ def main():
     workbook: Workbook = openpyxl.load_workbook("test.xlsx")
     for i, ws in enumerate(workbook):
         sheet: Worksheet = ws
-        program = read_program(sheet)
-        # marks = read_excel_marks(sheet)
-        print(program)
+        # program = read_program(sheet)
+        marks = read_excel_marks(sheet)
+        # print(program)
 
         # print(marks)
         exit()

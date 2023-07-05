@@ -35,4 +35,4 @@ yarn-error.log*
 next-env.d.ts
 /backend/venv
 /backend/test.xlsx
-__pycache__
+__pycache__/
