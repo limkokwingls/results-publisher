@@ -1,0 +1,54 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model CourseGrade {
+  id         Int     @id @default(autoincrement())
+  name       String  @db.VarChar(100)
+  code       String  @db.VarChar(20)
+  grade      String  @db.VarChar(5)
+  points     Float   @db.Float
+  marks      Float   @db.Float
+  student_no Int
+  Student    Student @relation(fields: [student_no], references: [no], onDelete: NoAction, onUpdate: NoAction, map: "course_grades_ibfk_1")
+
+  @@index([student_no], map: "student_no")
+  @@map("course_grades")
+}
+
+model Program {
+  id             Int            @id @default(autoincrement())
+  name           String         @db.VarChar(80)
+  level          String         @db.VarChar(20)
+  faculty        String         @db.VarChar(80)
+  studentClasses StudentClass[]
+
+  @@map("programs")
+}
+
+model StudentClass {
+  id         Int       @id @default(autoincrement())
+  name       String    @db.VarChar(100)
+  program_id Int
+  program    Program   @relation(fields: [program_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "student_classes_ibfk_1")
+  students   Student[]
+
+  @@index([program_id], map: "program_id")
+  @@map("student_classes")
+}
+
+model Student {
+  no               Int           @id @default(autoincrement())
+  name             String        @db.VarChar(100)
+  student_class_id Int
+  courseGrades     CourseGrade[]
+  studentClasses   StudentClass  @relation(fields: [student_class_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "students_ibfk_1")
+
+  @@index([student_class_id], map: "student_class_id")
+  @@map("students")
+}
