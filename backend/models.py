@@ -62,4 +62,4 @@ class CourseGrade(Base):
         self.student_id = student_id
 
     def __repr__(self):
-        return f"<CourseGrades(name={self.name}, code={self.code}, grade={self.grade}, points={self.points}, marks={self.marks})>"
+        return f"<CourseGrades(name='{self.name}', code={self.code}, grade={self.grade}, points={self.points}, marks={self.marks})>"

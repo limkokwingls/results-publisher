@@ -51,9 +51,13 @@ def get_course_rows(sheet: Worksheet):
             if cell.value == "Mk":
                 col_i = cell.col_idx
                 row_i = cell.row
-                grade_cell: Cell = sheet.cell(row_i - 2, col_i)
+                code_cell: Cell = sheet.cell(row_i - 2, col_i)
+                name_cell: Cell = sheet.cell(row_i - 8, col_i)
                 # courses[grade_cell.value] = grade_cell.column
-                courses[grade_cell.column] = grade_cell.value
+                courses[code_cell.column] = {
+                    "code": code_cell.value,
+                    "name": name_cell.value,
+                }
     return courses
 
 
@@ -86,7 +90,7 @@ def read_student_grades(sheet: Worksheet):
     for student_col in students:
         student_number = to_int(students[student_col].number)
         data = []
-        for mark_col, course_code in marks_dict.items():
+        for mark_col, course in marks_dict.items():
             marks_cell: Cell = sheet.cell(student_col, mark_col)
             grade_cell: Cell = sheet.cell(student_col, mark_col + 1)
             points_cell: Cell = sheet.cell(student_col, mark_col + 2)
@@ -96,12 +100,12 @@ def read_student_grades(sheet: Worksheet):
                 points = float(str(points_cell.value))
                 data.append(
                     CourseGrade(
-                        code=course_code,
+                        code=course["code"],
+                        name=course["name"],
                         marks=marks,
                         grade=grade,
                         points=points,
                         student_id=None,
-                        name=None,
                     )
                 )
         results[student_number] = data
