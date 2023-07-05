@@ -50,13 +50,16 @@ class CourseGrade(Base):
     code: Mapped[str] = mapped_column(String(20))
     grade: Mapped[str] = mapped_column(String(5))
     points: Mapped[float] = mapped_column(Float)
+    marks: Mapped[float] = mapped_column(Float)
     student_id: Mapped[int] = mapped_column(ForeignKey("students.id"))
 
-    def __init__(self, name, code, grade, points):
+    def __init__(self, name, code, grade, points, marks, student_id):
         self.name = name
         self.code = code
         self.grade = grade
         self.points = points
+        self.marks = marks
+        self.student_id = student_id
 
     def __repr__(self):
-        return f"<CourseGrades(name={self.name}, code={self.code}, grade={self.grade}, points={self.points})>"
+        return f"<CourseGrades(name={self.name}, code={self.code}, grade={self.grade}, points={self.points}, marks={self.marks})>"
