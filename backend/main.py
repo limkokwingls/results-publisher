@@ -9,6 +9,9 @@ from openpyxl.utils.dataframe import dataframe_to_rows
 from openpyxl.workbook.workbook import Workbook
 from openpyxl.worksheet.worksheet import Worksheet
 from rich import print
+from rich.console import Console
+
+console = Console()
 
 
 def to_int(value):
@@ -82,13 +85,11 @@ def get_students_with_rows(sheet: Worksheet) -> dict[int, Student]:
     return data
 
 
-def read_student_grades(sheet: Worksheet, student_class: StudentClass):
+def save_student_grades(sheet: Worksheet, student_class: StudentClass):
     marks_dict = get_course_rows(sheet)
     students = get_students_with_rows(sheet)
 
-    results = {}
     for student_col, std in students.items():
-        data = []
         for mark_col, course in marks_dict.items():
             marks_cell: Cell = sheet.cell(student_col, mark_col)
             grade_cell: Cell = sheet.cell(student_col, mark_col + 1)
@@ -106,19 +107,17 @@ def read_student_grades(sheet: Worksheet, student_class: StudentClass):
                     )
                     session.add(student)
                     session.commit()
-                data.append(
-                    CourseGrade(
-                        code=course["code"],
-                        name=course["name"],
-                        marks=marks,
-                        grade=grade,
-                        points=points,
-                        student_no=student.no,
-                    )
-                )
-        results[std.no] = data
 
-    return results
+                course_grade = CourseGrade(
+                    code=course["code"],
+                    name=course["name"],
+                    marks=marks,
+                    grade=grade,
+                    points=points,
+                    student_no=student.no,
+                )
+                session.add(course_grade)
+                session.commit()
 
 
 def create_student_class(sheet: Worksheet):
@@ -161,14 +160,15 @@ session = Session()
 
 
 def main():
-    grades = []
-
     workbook: Workbook = openpyxl.load_workbook("test.xlsx")
     for i, ws in enumerate(workbook):
         sheet: Worksheet = ws
-        student_class = create_student_class(sheet)
-        students = read_student_grades(sheet, student_class)
-        print(students)
+        with console.status(
+            f"{i + 1}/{len(workbook.worksheets)} Processing '{sheet.title}'..."
+        ):
+            student_class = create_student_class(sheet)
+            save_student_grades(sheet, student_class)
+        print("Done!")
 
 
 if __name__ == "__main__":
