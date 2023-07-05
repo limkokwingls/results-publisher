@@ -21,12 +21,22 @@ model CourseGrade {
   @@map("course_grades")
 }
 
+model Faculty {
+  id       Int       @id @default(autoincrement())
+  name     String    @db.VarChar(80)
+  programs Program[]
+
+  @@map("faculties")
+}
+
 model Program {
   id             Int            @id @default(autoincrement())
   name           String         @db.VarChar(80)
-  faculty        String         @db.VarChar(80)
+  faculty_id     Int
+  faculties      Faculty        @relation(fields: [faculty_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "programs_ibfk_1")
   studentClasses StudentClass[]
 
+  @@index([faculty_id], map: "faculty_id")
   @@map("programs")
 }
 

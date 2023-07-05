@@ -3,7 +3,7 @@ from types import NoneType
 
 import openpyxl
 from base import Base, Session, engine
-from models import CourseGrade, Program, Student, StudentClass
+from models import CourseGrade, Faculty, Program, Student, StudentClass
 from openpyxl.cell.cell import Cell
 from openpyxl.styles import Alignment, Border, Font, PatternFill, Side
 from openpyxl.utils.dataframe import dataframe_to_rows
@@ -11,6 +11,7 @@ from openpyxl.workbook.workbook import Workbook
 from openpyxl.worksheet.worksheet import Worksheet
 from rich import print
 from rich.console import Console
+from sqlalchemy.orm import SessionTransaction
 
 console = Console()
 Base.metadata.create_all(engine)
@@ -136,7 +137,7 @@ def save_student_grades(sheet: Worksheet, student_class: StudentClass):
 
 
 def create_student_class(sheet: Worksheet):
-    faculty = ""
+    faculty_name = ""
     program_index = -1
     class_index = -1
     program_name, class_name = "", None
@@ -146,24 +147,30 @@ def create_student_class(sheet: Worksheet):
             if cell.data_type == "s" and "faculty of" in str(cell.value).lower():
                 program_index = i + 1
                 class_index = i + 5
-                faculty = str(cell.value)
+                faculty_name = str(cell.value)
                 program_row = list(sheet.iter_rows())[program_index]
                 program_name = str(program_row[0].value)
 
                 # if information is all in one cell
                 lines = str(cell.value).split("\n")
                 if len(lines) > 5:
-                    faculty = lines[1]
+                    faculty_name = lines[1]
                     program_name = lines[2]
                     class_index = i + 1
 
     class_row = list(sheet.iter_rows())[class_index]
     class_name = str(class_row[0].value)
 
+    faculty = session.query(Faculty).filter_by(name=faculty_name).first()
+    if not faculty:
+        faculty = Faculty(name=faculty_name)
+        session.add(faculty)
+        session.commit()
+
     # find program from database
     program = session.query(Program).filter_by(name=program_name).first()
     if not program:
-        program = Program(name=program_name, faculty=faculty)
+        program = Program(name=program_name, faculty_id=faculty.id)
         session.add(program)
         session.commit()
 
@@ -191,6 +198,7 @@ def delete_everything():
     session.query(Student).delete()
     session.query(StudentClass).delete()
     session.query(Program).delete()
+    session.query(Faculty).delete()
     session.commit()
 
 

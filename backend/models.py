@@ -6,16 +6,25 @@ from sqlalchemy import Column, Date, Float, ForeignKey, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 
-class Program(Base):
-    __tablename__ = "programs"
+class Faculty(Base):
+    __tablename__ = "faculties"
     id = Column(Integer, primary_key=True, autoincrement=True)
     name: Mapped[str] = mapped_column(String(80))
-    faculty: Mapped[str] = mapped_column(String(80))
 
     def __repr__(self):
         return (
             f"<Program(name={self.name}, level={self.level}, faculty={self.faculty})>"
         )
+
+
+class Program(Base):
+    __tablename__ = "programs"
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    name: Mapped[str] = mapped_column(String(80))
+    faculty_id: Mapped[int] = mapped_column(ForeignKey("faculties.id"))
+
+    def __repr__(self):
+        return f"<Program(name={self.name}, faculty_id={self.faculty_id})>"
 
 
 class StudentClass(Base):

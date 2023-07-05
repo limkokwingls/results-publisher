@@ -1,6 +1,8 @@
 import Clickable from '@/components/Clickable';
+import { prisma } from '@/lib/db';
 
-export default function Home() {
+export default async function Home() {
+  // const programs = await prisma.programs.
   return (
     <div className='grid text-center mt-10 lg:mb-0 gap-5 lg:grid-cols-3 lg:text-left'>
       <Clickable href='/programs?level=Degree' text='Degree Programs' />
