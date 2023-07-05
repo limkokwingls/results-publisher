@@ -2,7 +2,7 @@ from types import NoneType
 
 import openpyxl
 from base import Base, Session, engine
-from models import Program
+from models import Program, StudentClass
 from openpyxl.cell.cell import Cell
 from openpyxl.styles import Alignment, Border, Font, PatternFill, Side
 from openpyxl.utils.dataframe import dataframe_to_rows
@@ -61,7 +61,7 @@ def get_student_numbers(sheet: Worksheet) -> dict[int, str]:
     return data
 
 
-def read_excel_marks(sheet: Worksheet):
+def read_student_grades(sheet: Worksheet):
     marks_dict = get_marks_cols(sheet)
     students = get_student_numbers(sheet)
 
@@ -77,10 +77,10 @@ def read_excel_marks(sheet: Worksheet):
                 data.append({course_code: mark_value})
         results[student_number] = data
 
-    return results  # convert_list_to_dict(results)
+    return results
 
 
-def read_program(sheet: Worksheet):
+def create_student_class(sheet: Worksheet):
     faculty = ""
     program_index = -1
     class_index = -1
@@ -98,12 +98,21 @@ def read_program(sheet: Worksheet):
     class_name = str(class_row[0].value)
     level = program_name.split(" ")[0]
 
-    return {
-        "name": program_name,
-        "level": level,
-        "faculty": faculty,
-        "class_name": class_name,
-    }
+    # find program from database
+    program = session.query(Program).filter_by(name=program_name).first()
+    if not program:
+        program = Program(name=program_name, level=level, faculty=faculty)
+        session.add(program)
+        session.commit()
+
+    # find class from database
+    student_class = session.query(StudentClass).filter_by(name=class_name).first()
+    if not student_class:
+        student_class = StudentClass(name=class_name, program_id=program.id)
+        session.add(student_class)
+        session.commit()
+
+    return student_class
 
 
 Base.metadata.create_all(engine)
@@ -112,19 +121,23 @@ session = Session()
 
 def main():
     programs = []
+    classes = []
+    grades = []
 
     workbook: Workbook = openpyxl.load_workbook("test.xlsx")
     for i, ws in enumerate(workbook):
         sheet: Worksheet = ws
-        program = read_program(sheet)
-        programs.append(program)
-        # marks = read_excel_marks(sheet)
+        student_class = create_student_class(sheet)
+        print(student_class)
+        # marks = read_student_grades(sheet)
+
         # print(program)
 
         # print(marks)
         # exit()
 
     print(programs)
+    print(classes)
 
     # session.add_all(programs)
     # session.commit()

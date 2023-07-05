@@ -12,11 +12,6 @@ class Program(Base):
     level: Mapped[str] = mapped_column(String(20))
     faculty: Mapped[str] = mapped_column(String(80))
 
-    def __init__(self, name, level, faculty):
-        self.name = name
-        self.level = level
-        self.faculty = faculty
-
     def __repr__(self):
         return (
             f"<Program(name={self.name}, level={self.level}, faculty={self.faculty})>"
@@ -28,6 +23,9 @@ class StudentClass(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     name: Mapped[str] = mapped_column(String(100))
     program_id: Mapped[int] = mapped_column(ForeignKey("programs.id"))
+
+    def __repr__(self):
+        return f"<StudentClass(name={self.name}, program_id={self.program_id})>"
 
 
 class CourseGrades(Base):
