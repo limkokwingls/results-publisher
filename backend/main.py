@@ -61,7 +61,7 @@ def get_course_rows(sheet: Worksheet):
     return courses
 
 
-def get_students_with_rows(sheet: Worksheet):
+def get_students_with_rows(sheet: Worksheet) -> dict[int, Student]:
     data = {}
     std_col = get_std_column(sheet)
     std_name_col = get_std_name_column(sheet)
@@ -77,18 +77,17 @@ def get_students_with_rows(sheet: Worksheet):
             if cell.column == std_name_col:
                 name = cell.value
         if num and name:
-            data[i + 1] = Student(name=name, number=num)
+            data[i + 1] = Student(name=name, no=num)
 
     return data
 
 
-def read_student_grades(sheet: Worksheet):
+def read_student_grades(sheet: Worksheet, student_class: StudentClass):
     marks_dict = get_course_rows(sheet)
     students = get_students_with_rows(sheet)
 
     results = {}
-    for student_col in students:
-        student_number = to_int(students[student_col].number)
+    for student_col, std in students.items():
         data = []
         for mark_col, course in marks_dict.items():
             marks_cell: Cell = sheet.cell(student_col, mark_col)
@@ -98,6 +97,15 @@ def read_student_grades(sheet: Worksheet):
                 marks = float(str(marks_cell.value))
                 grade = str(grade_cell.value)
                 points = float(str(points_cell.value))
+                student = session.query(Student).filter_by(no=std.no).first()
+                if not student:
+                    student = Student(
+                        name=std.name,
+                        no=std.no,
+                        student_class_id=student_class.id,
+                    )
+                    session.add(student)
+                    session.commit()
                 data.append(
                     CourseGrade(
                         code=course["code"],
@@ -105,10 +113,10 @@ def read_student_grades(sheet: Worksheet):
                         marks=marks,
                         grade=grade,
                         points=points,
-                        student_id=None,
+                        student_no=student.no,
                     )
                 )
-        results[student_number] = data
+        results[std.no] = data
 
     return results
 
@@ -158,7 +166,8 @@ def main():
     workbook: Workbook = openpyxl.load_workbook("test.xlsx")
     for i, ws in enumerate(workbook):
         sheet: Worksheet = ws
-        students = read_student_grades(sheet)
+        student_class = create_student_class(sheet)
+        students = read_student_grades(sheet, student_class)
         print(students)
 
 

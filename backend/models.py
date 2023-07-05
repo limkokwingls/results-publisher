@@ -31,16 +31,15 @@ class StudentClass(Base):
 
 class Student(Base):
     __tablename__ = "students"
-    id = Column(Integer, primary_key=True, autoincrement=True)
+    no: Mapped[str] = mapped_column(Integer, primary_key=True)
     name: Mapped[str] = mapped_column(String(100))
-    number: Mapped[str] = mapped_column(String(20))
     student_class_id: Mapped[int] = mapped_column(ForeignKey("student_classes.id"))
     course_grades: Mapped[list["CourseGrade"]] = relationship(
-        primaryjoin="foreign(CourseGrade.student_id) == Student.id"
+        primaryjoin="foreign(CourseGrade.student_no) == Student.no"
     )
 
     def __repr__(self):
-        return f"<Student(name={self.name}, number={self.number}, student_class_id={self.student_class_id})>"
+        return f"<Student(name={self.name}, no={self.no}, student_class_id={self.student_class_id})>"
 
 
 class CourseGrade(Base):
@@ -51,15 +50,15 @@ class CourseGrade(Base):
     grade: Mapped[str] = mapped_column(String(5))
     points: Mapped[float] = mapped_column(Float)
     marks: Mapped[float] = mapped_column(Float)
-    student_id: Mapped[int] = mapped_column(ForeignKey("students.id"))
+    student_no: Mapped[int] = mapped_column(ForeignKey("students.no"))
 
-    def __init__(self, name, code, grade, points, marks, student_id):
+    def __init__(self, name, code, grade, points, marks, student_no):
         self.name = name
         self.code = code
         self.grade = grade
         self.points = points
         self.marks = marks
-        self.student_id = student_id
+        self.student_no = student_no
 
     def __repr__(self):
         return f"<CourseGrades(name='{self.name}', code={self.code}, grade={self.grade}, points={self.points}, marks={self.marks})>"
