@@ -3,22 +3,22 @@ import { prisma } from '@/lib/db';
 
 type Props = { params: { id: string } };
 
-export default async function FacultiesPage({ params }: Props) {
+export default async function ProgramsPage({ params }: Props) {
   const id = Number(params.id);
-  const programs = await prisma.program.findMany({
+  const studentClasses = await prisma.studentClass.findMany({
     where: {
-      faculty_id: id,
+      program_id: id,
     },
   });
 
   return (
     <ul className='grid text-center mt-10 lg:mb-0 gap-5 lg:grid-cols-3 lg:text-left'>
-      {programs.map((program) => (
-        <li key={program.id}>
+      {studentClasses.map((studentClass) => (
+        <li key={studentClass.id}>
           <Clickable
-            key={program.id}
-            href={`/programs/${program.id}`}
-            text={program.name}
+            key={studentClass.id}
+            href={`/programs/${studentClass.id}`}
+            text={studentClass.name}
           />
         </li>
       ))}
