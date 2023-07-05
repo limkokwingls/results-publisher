@@ -1,5 +1,7 @@
+from os import name
+
 from base import Base
-from sqlalchemy import Column, Date, Float, Integer, String
+from sqlalchemy import Column, Date, Float, ForeignKey, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column
 
 
@@ -15,8 +17,17 @@ class Program(Base):
         self.level = level
         self.faculty = faculty
 
-    def __str__(self):
-        return f"{self.name} {self.faculty}"
+    def __repr__(self):
+        return (
+            f"<Program(name={self.name}, level={self.level}, faculty={self.faculty})>"
+        )
+
+
+class StudentClass(Base):
+    __tablename__ = "student_classes"
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    name: Mapped[str] = mapped_column(String(100))
+    program_id: Mapped[int] = mapped_column(ForeignKey("programs.id"))
 
 
 class CourseGrades(Base):
@@ -33,5 +44,5 @@ class CourseGrades(Base):
         self.grade = grade
         self.points = points
 
-    def __str__(self):
-        return f"{self.name} {self.code} {self.grade} {self.points}"
+    def __repr__(self):
+        return f"<CourseGrades(name={self.name}, code={self.code}, grade={self.grade}, points={self.points})>"

@@ -83,18 +83,27 @@ def read_excel_marks(sheet: Worksheet):
 def read_program(sheet: Worksheet):
     faculty = ""
     program_index = -1
+    class_index = -1
     for i, row in enumerate(sheet.iter_rows()):
         for _cell in row:
             cell: Cell = _cell
             if cell.data_type == "s" and "faculty" in str(cell.value).lower():
                 program_index = i + 1
+                class_index = i + 5
                 faculty = str(cell.value)
 
     program_row = list(sheet.iter_rows())[program_index]
+    class_row = list(sheet.iter_rows())[class_index]
     program_name = str(program_row[0].value)
+    class_name = str(class_row[0].value)
     level = program_name.split(" ")[0]
 
-    return Program(name=program_name, level=level, faculty=faculty)
+    return {
+        "name": program_name,
+        "level": level,
+        "faculty": faculty,
+        "class_name": class_name,
+    }
 
 
 Base.metadata.create_all(engine)
@@ -117,8 +126,8 @@ def main():
 
     print(programs)
 
-    session.add_all(programs)
-    session.commit()
+    # session.add_all(programs)
+    # session.commit()
 
 
 if __name__ == "__main__":
