@@ -10,7 +10,6 @@ class Program(Base):
     __tablename__ = "programs"
     id = Column(Integer, primary_key=True, autoincrement=True)
     name: Mapped[str] = mapped_column(String(80))
-    level: Mapped[str] = mapped_column(String(20))
     faculty: Mapped[str] = mapped_column(String(80))
 
     def __repr__(self):

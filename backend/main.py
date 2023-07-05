@@ -139,7 +139,7 @@ def create_student_class(sheet: Worksheet):
     faculty = ""
     program_index = -1
     class_index = -1
-    program_name, level, class_name = "", None, None
+    program_name, class_name = "", None
     for i, row in enumerate(sheet.iter_rows()):
         for _cell in row:
             cell: Cell = _cell
@@ -159,12 +159,11 @@ def create_student_class(sheet: Worksheet):
 
     class_row = list(sheet.iter_rows())[class_index]
     class_name = str(class_row[0].value)
-    level = program_name.split(" ")[0]
 
     # find program from database
     program = session.query(Program).filter_by(name=program_name).first()
     if not program:
-        program = Program(name=program_name, level=level, faculty=faculty)
+        program = Program(name=program_name, faculty=faculty)
         session.add(program)
         session.commit()
 

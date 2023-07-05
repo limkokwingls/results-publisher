@@ -24,7 +24,6 @@ model CourseGrade {
 model Program {
   id             Int            @id @default(autoincrement())
   name           String         @db.VarChar(80)
-  level          String         @db.VarChar(20)
   faculty        String         @db.VarChar(80)
   studentClasses StudentClass[]
 
