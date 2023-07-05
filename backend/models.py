@@ -33,14 +33,14 @@ class Student(Base):
     __tablename__ = "students"
     id = Column(Integer, primary_key=True, autoincrement=True)
     name: Mapped[str] = mapped_column(String(100))
-    student_number: Mapped[str] = mapped_column(String(20))
+    number: Mapped[str] = mapped_column(String(20))
     student_class_id: Mapped[int] = mapped_column(ForeignKey("student_classes.id"))
     course_grades: Mapped[list["CourseGrade"]] = relationship(
         primaryjoin="foreign(CourseGrade.student_id) == Student.id"
     )
 
     def __repr__(self):
-        return f"<Student(name={self.name}, student_number={self.student_number}, student_class_id={self.student_class_id})>"
+        return f"<Student(name={self.name}, number={self.number}, student_class_id={self.student_class_id})>"
 
 
 class CourseGrade(Base):

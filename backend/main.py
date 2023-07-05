@@ -2,7 +2,7 @@ from types import NoneType
 
 import openpyxl
 from base import Base, Session, engine
-from models import Program, StudentClass
+from models import Program, Student, StudentClass
 from openpyxl.cell.cell import Cell
 from openpyxl.styles import Alignment, Border, Font, PatternFill, Side
 from openpyxl.utils.dataframe import dataframe_to_rows
@@ -57,22 +57,30 @@ def get_marks_cols(sheet: Worksheet):
     return courses
 
 
-def get_student_numbers(sheet: Worksheet) -> dict[int, str]:
+def get_students_with_rows(sheet: Worksheet):
     data = {}
     std_col = get_std_column(sheet)
+    std_name_col = get_std_name_column(sheet)
 
-    for col in sheet.iter_cols():
-        for c in col:
-            cell: Cell = c
+    for i, row in enumerate(sheet.iter_rows()):
+        num = None
+        name = None
+        for _cell in row:
+            cell: Cell = _cell
             if cell.column == std_col:
                 if is_number(cell.value):
-                    data[cell.row] = cell.value
+                    num = cell.value
+            if cell.column == std_name_col:
+                name = cell.value
+        if num and name:
+            data[i + 1] = Student(name=name, number=num)
+
     return data
 
 
 def read_student_grades(sheet: Worksheet):
     marks_dict = get_marks_cols(sheet)
-    students = get_student_numbers(sheet)
+    students = get_students_with_rows(sheet)
 
     results = {}
     for student_col in students:
@@ -134,7 +142,7 @@ def main():
     workbook: Workbook = openpyxl.load_workbook("test.xlsx")
     for i, ws in enumerate(workbook):
         sheet: Worksheet = ws
-        students = get_student_numbers(sheet)
+        students = get_students_with_rows(sheet)
         print(students)
 
 
