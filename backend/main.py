@@ -43,7 +43,7 @@ def get_std_name_column(sheet: Worksheet):
     return 2
 
 
-def get_marks_cols(sheet: Worksheet):
+def get_course_cols(sheet: Worksheet):
     courses = {}
     for col in sheet.iter_cols():
         for c in col:
@@ -79,7 +79,7 @@ def get_students_with_rows(sheet: Worksheet):
 
 
 def read_student_grades(sheet: Worksheet):
-    marks_dict = get_marks_cols(sheet)
+    marks_dict = get_course_cols(sheet)
     students = get_students_with_rows(sheet)
 
     results = {}
@@ -142,7 +142,7 @@ def main():
     workbook: Workbook = openpyxl.load_workbook("test.xlsx")
     for i, ws in enumerate(workbook):
         sheet: Worksheet = ws
-        students = get_students_with_rows(sheet)
+        students = get_course_cols(sheet)
         print(students)
 
 
