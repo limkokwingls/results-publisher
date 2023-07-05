@@ -139,17 +139,25 @@ def create_student_class(sheet: Worksheet):
     faculty = ""
     program_index = -1
     class_index = -1
+    program_name, level, class_name = "", None, None
     for i, row in enumerate(sheet.iter_rows()):
         for _cell in row:
             cell: Cell = _cell
-            if cell.data_type == "s" and "faculty" in str(cell.value).lower():
+            if cell.data_type == "s" and "faculty of" in str(cell.value).lower():
                 program_index = i + 1
                 class_index = i + 5
                 faculty = str(cell.value)
+                program_row = list(sheet.iter_rows())[program_index]
+                program_name = str(program_row[0].value)
 
-    program_row = list(sheet.iter_rows())[program_index]
+                # if information is all in one cell
+                lines = str(cell.value).split("\n")
+                if len(lines) > 5:
+                    faculty = lines[1]
+                    program_name = lines[2]
+                    class_index = i + 1
+
     class_row = list(sheet.iter_rows())[class_index]
-    program_name = str(program_row[0].value)
     class_name = str(class_row[0].value)
     level = program_name.split(" ")[0]
 
@@ -200,6 +208,7 @@ def main():
             with console.status(
                 f"{i + 1}/{len(workbook.worksheets)} Processing '{sheet.title}'..."
             ):
+                print(sheet.title)
                 student_class = create_student_class(sheet)
                 save_student_grades(sheet, student_class)
     print("Done!")
