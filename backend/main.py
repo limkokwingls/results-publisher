@@ -1,6 +1,7 @@
 from types import NoneType
 
 import openpyxl
+from base import Base, Session, engine
 from models import Program
 from openpyxl.cell.cell import Cell
 from openpyxl.styles import Alignment, Border, Font, PatternFill, Side
@@ -91,20 +92,33 @@ def read_program(sheet: Worksheet):
 
     program_row = list(sheet.iter_rows())[program_index]
     program_name = str(program_row[0].value)
+    level = program_name.split(" ")[0]
 
-    return Program(name=program_name, faculty=faculty)
+    return Program(name=program_name, level=level, faculty=faculty)
+
+
+Base.metadata.create_all(engine)
+session = Session()
 
 
 def main():
+    programs = []
+
     workbook: Workbook = openpyxl.load_workbook("test.xlsx")
     for i, ws in enumerate(workbook):
         sheet: Worksheet = ws
-        # program = read_program(sheet)
-        marks = read_excel_marks(sheet)
+        program = read_program(sheet)
+        programs.append(program)
+        # marks = read_excel_marks(sheet)
         # print(program)
 
         # print(marks)
-        exit()
+        # exit()
+
+    print(programs)
+
+    session.add_all(programs)
+    session.commit()
 
 
 if __name__ == "__main__":
