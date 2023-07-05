@@ -34,6 +34,15 @@ def get_std_column(sheet: Worksheet):
     return 3
 
 
+def get_std_name_column(sheet: Worksheet):
+    for col in sheet.iter_cols():
+        for c in col:
+            cell: Cell = c
+            if cell.value == "Name":
+                return cell.column
+    return 2
+
+
 def get_marks_cols(sheet: Worksheet):
     courses = {}
     for col in sheet.iter_cols():
@@ -125,9 +134,8 @@ def main():
     workbook: Workbook = openpyxl.load_workbook("test.xlsx")
     for i, ws in enumerate(workbook):
         sheet: Worksheet = ws
-        marks = read_student_grades(sheet)
-        print(marks)
-        exit()
+        students = get_student_numbers(sheet)
+        print(students)
 
 
 if __name__ == "__main__":
