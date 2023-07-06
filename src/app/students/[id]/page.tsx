@@ -36,18 +36,20 @@ export default async function FacultyPage({ params }: Props) {
         <div className='relative overflow-x-auto mt-6'>
           <table className='w-full mt-5 text-sm text-left'>
             <thead className='border-b border-gray-400 font-semibold tracking-wider '>
-              <th scope='col' className='pb-3 text-left'>
-                Course
-              </th>
-              <th scope='col' className='pb-3 text-left'>
-                Grade
-              </th>
-              <th scope='col' className='pb-3 text-left'>
-                Marks
-              </th>
-              <th scope='col' className='pb-3 text-left'>
-                Points
-              </th>
+              <tr>
+                <th scope='col' className='pb-3 text-left'>
+                  Course
+                </th>
+                <th scope='col' className='pb-3 text-left'>
+                  Grade
+                </th>
+                <th scope='col' className='pb-3 text-left'>
+                  Marks
+                </th>
+                <th scope='col' className='pb-3 text-left'>
+                  Points
+                </th>
+              </tr>
             </thead>
             <tbody>
               {grades.map((grade) => (
