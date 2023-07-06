@@ -53,7 +53,7 @@ class Student(Base):
 class FacultyRemarks(Base):
     __tablename__ = "faculty_remarks"
     id = Column(Integer, primary_key=True, autoincrement=True)
-    remarks: Mapped[str] = mapped_column(Text)
+    remarks: Mapped[str] = mapped_column(Text, default="")
     student_no: Mapped[int] = mapped_column(ForeignKey("students.no"))
 
     def __repr__(self):
