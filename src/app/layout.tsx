@@ -1,3 +1,4 @@
+import ProgressBar from '@/components/ProgressBar';
 import './globals.css';
 import { Inter } from 'next/font/google';
 import Image from 'next/image';
@@ -26,6 +27,7 @@ export default function RootLayout({
           <div className='flex justify-center'>
             <Image alt='Logo' src='/logo.png' width={280} height={200} />
           </div>
+          <ProgressBar />
           {children}
         </main>
       </body>
