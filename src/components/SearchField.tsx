@@ -1,13 +1,15 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 export default function SearchField() {
   const [studentNo, setStudentNo] = useState('');
+  const { push } = useRouter();
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    window.location.href = `/students/${studentNo}`;
+    push(`/students/${studentNo}`);
   };
 
   return (

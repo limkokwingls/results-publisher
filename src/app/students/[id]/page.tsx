@@ -1,5 +1,5 @@
-import Clickable from '@/components/Clickable';
 import { prisma } from '@/lib/db';
+import { notFound } from 'next/navigation';
 
 type Props = { params: { id: string } };
 
@@ -15,6 +15,10 @@ export default async function FacultyPage({ params }: Props) {
       student_no: stdNo,
     },
   });
+
+  if (!grades) {
+    notFound();
+  }
 
   return (
     <div className='mt-10 text-gray-200'>
