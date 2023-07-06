@@ -10,12 +10,19 @@ export default async function FacultyPage({ params }: Props) {
       student_no: stdNo,
     },
   });
+  const remarks = await prisma.facultyRemarks.findFirst({
+    where: {
+      student_no: stdNo,
+    },
+  });
 
   return (
     <div className='mt-10 text-gray-200'>
       <div>
         <h2 className='text-xl font-semibold'>{stdNo}</h2>
-        <p className='text-zinc-400 mt-2'>Faculty Remarks</p>
+        <span className='text-xs mt-2 block px-2 py-4 bg-zinc-900  border border-zinc-800'>
+          {remarks?.remarks}
+        </span>
       </div>
       <div className='relative overflow-x-auto mt-6'>
         <table className='w-full mt-5 text-sm text-left'>
