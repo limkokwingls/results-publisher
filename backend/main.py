@@ -158,6 +158,10 @@ def save_student_grades(sheet: Worksheet, student_class: StudentClass):
                     session.add(faculty_remarks)
                     session.commit()
 
+                if marks_cell.fill.fill_type:
+                    faculty_remarks.is_blocked = True
+                    session.commit()
+
 
 def create_student_class(sheet: Worksheet):
     faculty_name = ""

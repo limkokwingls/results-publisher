@@ -51,6 +51,7 @@ class FacultyRemarks(Base):
     __tablename__ = "faculty_remarks"
     id = Column(Integer, primary_key=True, autoincrement=True)
     remarks: Mapped[str] = mapped_column(Text, default="")
+    is_blocked: Mapped[bool] = mapped_column(Integer, default=False)
     student_no: Mapped[int] = mapped_column(Integer, index=True)
 
     def __repr__(self):
