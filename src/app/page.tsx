@@ -4,7 +4,7 @@ import { prisma } from '@/lib/db';
 export default async function Home() {
   const faculties = await prisma.faculty.findMany();
   return (
-    <div className='grid text-center mt-10 lg:mb-0 gap-5 lg:grid-cols-3 lg:text-left'>
+    <div className='grid mt-10 gap-5 md:grid-cols-2'>
       {faculties.map((faculty) => (
         <Clickable
           key={faculty.id}

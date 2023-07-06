@@ -15,16 +15,14 @@ export default async function ClassPage({ params }: Props) {
   });
 
   return (
-    <ul className='grid text-center mt-10 lg:mb-0 gap-5 lg:grid-cols-3 lg:text-left'>
+    <div className='mt-10 flex flex-col space-y-1'>
       {students.map((student) => (
-        <li key={student.no}>
-          <Clickable
-            key={student.no}
-            href={`/students/${student.no}`}
-            text={student.name}
-          />
-        </li>
+        <Clickable
+          key={student.no}
+          href={`/students/${student.no}`}
+          text={student.name}
+        />
       ))}
-    </ul>
+    </div>
   );
 }

@@ -12,16 +12,14 @@ export default async function ProgramPage({ params }: Props) {
   });
 
   return (
-    <ul className='grid text-center mt-10 lg:mb-0 gap-5 lg:grid-cols-3 lg:text-left'>
+    <div className='grid mt-10 gap-5 md:grid-cols-2'>
       {studentClasses.map((studentClass) => (
-        <li key={studentClass.id}>
-          <Clickable
-            key={studentClass.id}
-            href={`/classes/${studentClass.id}`}
-            text={studentClass.name}
-          />
-        </li>
+        <Clickable
+          key={studentClass.id}
+          href={`/classes/${studentClass.id}`}
+          text={studentClass.name}
+        />
       ))}
-    </ul>
+    </div>
   );
 }
