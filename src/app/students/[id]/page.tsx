@@ -16,7 +16,7 @@ export default async function FacultyPage({ params }: Props) {
     },
   });
 
-  if (!grades) {
+  if (grades.length === 0) {
     notFound();
   }
 

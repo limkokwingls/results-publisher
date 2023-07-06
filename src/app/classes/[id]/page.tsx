@@ -1,5 +1,6 @@
 import Clickable from '@/components/Clickable';
 import { prisma } from '@/lib/db';
+import { notFound } from 'next/navigation';
 
 type Props = { params: { id: string } };
 
@@ -13,6 +14,10 @@ export default async function ClassPage({ params }: Props) {
       name: 'asc',
     },
   });
+
+  if (students.length === 0) {
+    notFound();
+  }
 
   return (
     <div className='mt-10 flex flex-col space-y-1'>

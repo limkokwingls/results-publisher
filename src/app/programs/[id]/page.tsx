@@ -1,5 +1,6 @@
 import Clickable from '@/components/Clickable';
 import { prisma } from '@/lib/db';
+import { notFound } from 'next/navigation';
 
 type Props = { params: { id: string } };
 
@@ -10,6 +11,10 @@ export default async function ProgramPage({ params }: Props) {
       program_id: id,
     },
   });
+
+  if (studentClasses.length === 0) {
+    notFound();
+  }
 
   return (
     <div className='grid mt-10 gap-3 md:gap-5 md:grid-cols-3'>
