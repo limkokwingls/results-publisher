@@ -21,7 +21,7 @@ export default async function FacultyPage({ params }: Props) {
       <div>
         <h2 className='text-xl font-semibold'>{stdNo}</h2>
         <span className='text-xs mt-2 block px-2 py-4 bg-zinc-900  border border-zinc-800'>
-          {remarks?.remarks}
+          {remarks?.remarks || 'No Remarks'}
         </span>
       </div>
       <div className='relative overflow-x-auto mt-6'>
