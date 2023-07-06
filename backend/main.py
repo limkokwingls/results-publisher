@@ -46,9 +46,9 @@ def get_remarks_column(sheet: Worksheet):
     for col in sheet.iter_cols():
         for c in col:
             cell: Cell = c
-            if "remark" in str(cell.value).lower():
+            if "faculty remark" in str(cell.value).lower():
                 return cell.column
-    return 1
+    raise Exception("Remarks column not found")
 
 
 def get_std_name_column(sheet: Worksheet):
@@ -217,12 +217,12 @@ def get_data_files(dir: str):
 
 
 def delete_everything():
+    session.query(FacultyRemarks).delete()
     session.query(CourseGrade).delete()
     session.query(Student).delete()
     session.query(StudentClass).delete()
     session.query(Program).delete()
     session.query(Faculty).delete()
-    session.query(FacultyRemarks).delete()
     session.commit()
 
 
