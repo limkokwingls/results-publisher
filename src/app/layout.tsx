@@ -25,7 +25,7 @@ export default function RootLayout({
             <Link href='/'>Student Results</Link>
           </h1>
           <div className='flex justify-center'>
-            <Image alt='Logo' src='/logo.png' width={280} height={200} />
+            <Image alt='Logo' src='/logo.png' width={280} height={125} />
           </div>
           <ProgressProvider>{children}</ProgressProvider>
         </main>
