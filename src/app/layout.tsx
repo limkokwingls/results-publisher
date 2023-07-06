@@ -1,3 +1,4 @@
+import ProgressProvider from '@/components/Providers';
 import './globals.css';
 import { Inter } from 'next/font/google';
 import Image from 'next/image';
@@ -26,7 +27,7 @@ export default function RootLayout({
           <div className='flex justify-center'>
             <Image alt='Logo' src='/logo.png' width={280} height={200} />
           </div>
-          {children}
+          <ProgressProvider>{children}</ProgressProvider>
         </main>
       </body>
     </html>
