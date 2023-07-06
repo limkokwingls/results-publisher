@@ -1,4 +1,3 @@
-import ProgressBar from '@/components/ProgressBar';
 import './globals.css';
 import { Inter } from 'next/font/google';
 import Image from 'next/image';
@@ -20,7 +19,6 @@ export default function RootLayout({
   return (
     <html lang='en'>
       <body className={inter.className}>
-        <ProgressBar />
         <main className='container mx-auto px-4 md:px-20'>
           <h1 className='text-4xl font-bold text-zinc-300 text-center mt-14 mb-2'>
             <Link href='/'>Student Results</Link>
