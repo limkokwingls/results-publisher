@@ -20,10 +20,10 @@ export default function RootLayout({
       <body className={inter.className}>
         <main className='flex min-h-screen flex-col items-center'>
           <div className='flex flex-col items-center justify-center'>
-            <h1 className='text-4xl font-bold text-zinc-300 text-center mt-14 mb-2'>
-              Result Publication
+            <h1 className='text-3xl font-bold text-zinc-300 text-center mt-14 mb-2'>
+              Student Publication
             </h1>
-            <Image alt='Logo' src='/logo.png' width={325} height={200} />
+            <Image alt='Logo' src='/logo.png' width={280} height={200} />
           </div>
           {children}
         </main>

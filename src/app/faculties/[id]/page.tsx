@@ -3,7 +3,7 @@ import { prisma } from '@/lib/db';
 
 type Props = { params: { id: string } };
 
-export default async function FacultiesPage({ params }: Props) {
+export default async function FacultyPage({ params }: Props) {
   const id = Number(params.id);
   const programs = await prisma.program.findMany({
     where: {
