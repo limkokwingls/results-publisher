@@ -47,7 +47,6 @@ export default async function FacultyPage({ params }: Props) {
             ))}
           </tbody>
         </table>
-        d
       </div>
     </div>
   );

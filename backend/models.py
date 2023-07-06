@@ -2,7 +2,7 @@ import re
 from os import name
 
 from base import Base
-from sqlalchemy import Column, Date, Float, ForeignKey, Integer, String
+from sqlalchemy import Column, Float, ForeignKey, Integer, String, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 
@@ -48,6 +48,16 @@ class Student(Base):
 
     def __repr__(self):
         return f"<Student(name={self.name}, no={self.no}, student_class_id={self.student_class_id})>"
+
+
+class FacultyRemarks(Base):
+    __tablename__ = "faculty_remarks"
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    remarks: Mapped[str] = mapped_column(Text)
+    student_no: Mapped[int] = mapped_column(ForeignKey("students.no"))
+
+    def __repr__(self):
+        return f"<FacultyRemarks(remarks={self.remarks}, student_no={self.student_no})>"
 
 
 class CourseGrade(Base):
