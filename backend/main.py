@@ -6,6 +6,7 @@ from base import Base, Session, engine
 from models import CourseGrade, Faculty, Program, Student, StudentClass
 from openpyxl.cell.cell import Cell
 from openpyxl.styles import Alignment, Border, Font, PatternFill, Side
+from openpyxl.styles.colors import Color
 from openpyxl.utils.dataframe import dataframe_to_rows
 from openpyxl.workbook.workbook import Workbook
 from openpyxl.worksheet.worksheet import Worksheet
@@ -148,8 +149,11 @@ def save_student_grades(sheet: Worksheet, student_class: StudentClass):
                 remarks_cell: Cell = sheet.cell(student_col, remarks_col)
                 if remarks_cell.value:
                     student.remarks = str(remarks_cell.value)
-                if marks_cell.fill.fill_type:
-                    student.is_blocked = True
+                fill: PatternFill = marks_cell.fill
+                if fill.fill_type:
+                    color: Color = fill.fgColor
+                    if color.rgb != "FFFFFFFF":
+                        student.is_blocked = True
                 session.commit()
 
 
