@@ -13,8 +13,11 @@ export default async function FacultyPage({ params }: Props) {
 
   return (
     <div className='mt-10 text-gray-200'>
-      <h2>Results for {stdNo}</h2>
-      <div className='relative overflow-x-auto'>
+      <div>
+        <h2 className='text-xl font-semibold'>{stdNo}</h2>
+        <p className='text-zinc-400 mt-2'>Faculty Remarks</p>
+      </div>
+      <div className='relative overflow-x-auto mt-6'>
         <table className='w-full mt-5 text-sm text-left'>
           <thead className='border-b border-gray-400 font-semibold tracking-wider '>
             <th scope='col' className='pb-3 text-left'>
@@ -44,6 +47,7 @@ export default async function FacultyPage({ params }: Props) {
             ))}
           </tbody>
         </table>
+        d
       </div>
     </div>
   );
