@@ -17,11 +17,9 @@ export default async function ClassPage({ params }: Props) {
   return (
     <div className='mt-10 flex flex-col space-y-1'>
       {students.map((student) => (
-        <Clickable
-          key={student.no}
-          href={`/students/${student.no}`}
-          text={student.name}
-        />
+        <Clickable key={student.no} href={`/students/${student.no}`}>
+          {student.name}
+        </Clickable>
       ))}
     </div>
   );

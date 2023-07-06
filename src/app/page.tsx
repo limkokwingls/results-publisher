@@ -6,11 +6,9 @@ export default async function Home() {
   return (
     <div className='grid mt-10 gap-5 md:grid-cols-2'>
       {faculties.map((faculty) => (
-        <Clickable
-          key={faculty.id}
-          href={`/faculties/${faculty.id}`}
-          text={faculty.name}
-        />
+        <Clickable key={faculty.id} href={`/faculties/${faculty.id}`}>
+          {faculty.name}
+        </Clickable>
       ))}
     </div>
   );

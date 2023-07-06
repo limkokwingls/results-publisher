@@ -14,11 +14,9 @@ export default async function FacultyPage({ params }: Props) {
   return (
     <div className='grid mt-10 gap-5 md:grid-cols-2'>
       {programs.map((program) => (
-        <Clickable
-          key={program.id}
-          href={`/programs/${program.id}`}
-          text={program.name}
-        />
+        <Clickable key={program.id} href={`/programs/${program.id}`}>
+          {program.name}
+        </Clickable>
       ))}
     </div>
   );
