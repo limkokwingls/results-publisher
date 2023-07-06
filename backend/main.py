@@ -222,6 +222,7 @@ def delete_everything():
     session.query(StudentClass).delete()
     session.query(Program).delete()
     session.query(Faculty).delete()
+    session.query(FacultyRemarks).delete()
     session.commit()
 
 
