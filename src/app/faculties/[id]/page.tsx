@@ -12,7 +12,7 @@ export default async function FacultyPage({ params }: Props) {
   });
 
   return (
-    <div className='grid mt-10 gap-3 md:gap-5 md:grid-cols-2'>
+    <div className='grid mt-10 gap-3 md:gap-5 md:grid-cols-3'>
       {programs.map((program) => (
         <Clickable key={program.id} href={`/programs/${program.id}`}>
           {program.name}

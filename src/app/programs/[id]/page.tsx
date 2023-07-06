@@ -12,7 +12,7 @@ export default async function ProgramPage({ params }: Props) {
   });
 
   return (
-    <div className='grid mt-10 gap-3'>
+    <div className='grid mt-10 gap-3 md:gap-5 md:grid-cols-3'>
       {studentClasses.map((studentClass) => (
         <Clickable key={studentClass.id} href={`/classes/${studentClass.id}`}>
           {studentClass.name}
