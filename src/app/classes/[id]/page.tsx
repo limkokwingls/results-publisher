@@ -25,7 +25,13 @@ export default async function ClassPage({ params }: Props) {
         <Clickable key={student.no} href={`/students/${student.no}`}>
           <div>
             <h3 className='text-lg'>{student.no}</h3>
-            <p className='text-xs text-gray-400'>{student.name}</p>
+            <p className='text-xs text-gray-400'>
+              {student?.is_blocked ? (
+                <span>Blocked</span>
+              ) : (
+                <span>{student?.remarks || 'No Remarks'}</span>
+              )}
+            </p>
           </div>
         </Clickable>
       ))}
