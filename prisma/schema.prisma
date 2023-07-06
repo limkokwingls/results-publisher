@@ -57,6 +57,7 @@ model Student {
 model FacultyRemarks {
   id         Int    @id @default(autoincrement())
   remarks    String @db.Text
+  is_blocked Int
   student_no Int
 
   @@index([student_no], map: "ix_faculty_remarks_student_no")
