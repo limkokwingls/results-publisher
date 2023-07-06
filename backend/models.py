@@ -42,20 +42,11 @@ class Student(Base):
     no: Mapped[str] = mapped_column(Integer, primary_key=True)
     name: Mapped[str] = mapped_column(String(100))
     student_class_id: Mapped[int] = mapped_column(Integer, index=True)
+    remarks: Mapped[str] = mapped_column(Text, default="")
+    is_blocked: Mapped[bool] = mapped_column(Integer, default=False)
 
     def __repr__(self):
         return f"<Student(name={self.name}, no={self.no}, student_class_id={self.student_class_id})>"
-
-
-class FacultyRemarks(Base):
-    __tablename__ = "faculty_remarks"
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    remarks: Mapped[str] = mapped_column(Text, default="")
-    is_blocked: Mapped[bool] = mapped_column(Integer, default=False)
-    student_no: Mapped[int] = mapped_column(Integer, index=True)
-
-    def __repr__(self):
-        return f"<FacultyRemarks(remarks={self.remarks}, student_no={self.student_no})>"
 
 
 class CourseGrade(Base):

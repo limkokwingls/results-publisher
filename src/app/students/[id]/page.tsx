@@ -5,12 +5,10 @@ type Props = { params: { id: string } };
 
 export default async function FacultyPage({ params }: Props) {
   const stdNo = Number(params.id);
-  const grades = await prisma.courseGrade.findMany({
-    where: {
-      student_no: stdNo,
-    },
+  const student = await prisma.student.findUnique({
+    where: { no: stdNo },
   });
-  const remarks = await prisma.facultyRemarks.findFirst({
+  const grades = await prisma.courseGrade.findMany({
     where: {
       student_no: stdNo,
     },
@@ -25,14 +23,14 @@ export default async function FacultyPage({ params }: Props) {
       <div>
         <h2 className='text-xl font-semibold'>{stdNo}</h2>
         <div className='text-xs mt-2 px-2 py-4 bg-zinc-900  border border-zinc-800'>
-          {remarks?.is_blocked ? (
+          {student?.is_blocked ? (
             <span>Blocked</span>
           ) : (
-            <span>{remarks?.remarks || 'No Remarks'}</span>
+            <span>{student?.remarks || 'No Remarks'}</span>
           )}
         </div>
       </div>
-      {!remarks?.is_blocked && (
+      {!student?.is_blocked && (
         <div className='relative overflow-x-auto mt-6'>
           <table className='w-full mt-5 text-sm text-left'>
             <thead className='border-b border-gray-400 font-semibold tracking-wider '>

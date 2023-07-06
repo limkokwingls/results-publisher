@@ -3,7 +3,7 @@ from types import NoneType
 
 import openpyxl
 from base import Base, Session, engine
-from models import CourseGrade, Faculty, FacultyRemarks, Program, Student, StudentClass
+from models import CourseGrade, Faculty, Program, Student, StudentClass
 from openpyxl.cell.cell import Cell
 from openpyxl.styles import Alignment, Border, Font, PatternFill, Side
 from openpyxl.utils.dataframe import dataframe_to_rows
@@ -146,21 +146,11 @@ def save_student_grades(sheet: Worksheet, student_class: StudentClass):
                 session.commit()
 
                 remarks_cell: Cell = sheet.cell(student_col, remarks_col)
-                faculty_remarks = (
-                    session.query(FacultyRemarks)
-                    .filter_by(student_no=student.no)
-                    .first()
-                )
-                if not faculty_remarks:
-                    faculty_remarks = FacultyRemarks(
-                        remarks=remarks_cell.value, student_no=student.no
-                    )
-                    session.add(faculty_remarks)
-                    session.commit()
-
+                if remarks_cell.value:
+                    student.remarks = str(remarks_cell.value)
                 if marks_cell.fill.fill_type:
-                    faculty_remarks.is_blocked = True
-                    session.commit()
+                    student.is_blocked = True
+                session.commit()
 
 
 def create_student_class(sheet: Worksheet):
@@ -221,7 +211,6 @@ def get_data_files(dir: str):
 
 
 def delete_everything():
-    session.query(FacultyRemarks).delete()
     session.query(CourseGrade).delete()
     session.query(Student).delete()
     session.query(StudentClass).delete()

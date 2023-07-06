@@ -49,17 +49,9 @@ model Student {
   no               Int    @id @default(autoincrement())
   name             String @db.VarChar(100)
   student_class_id Int
+  remarks          String @db.Text
+  is_blocked       Int
 
   @@index([student_class_id], map: "ix_students_student_class_id")
   @@map("students")
-}
-
-model FacultyRemarks {
-  id         Int    @id @default(autoincrement())
-  remarks    String @db.Text
-  is_blocked Int
-  student_no Int
-
-  @@index([student_no], map: "ix_faculty_remarks_student_no")
-  @@map("faculty_remarks")
 }
