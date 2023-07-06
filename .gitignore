@@ -38,3 +38,4 @@ __pycache__/
 /backend/data
 /.env
 .vercel
+*.sql
