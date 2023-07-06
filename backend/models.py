@@ -21,7 +21,7 @@ class Program(Base):
     __tablename__ = "programs"
     id = Column(Integer, primary_key=True, autoincrement=True)
     name: Mapped[str] = mapped_column(String(80))
-    faculty_id: Mapped[int] = mapped_column(ForeignKey("faculties.id"))
+    faculty_id: Mapped[int] = mapped_column(Integer, index=True)
 
     def __repr__(self):
         return f"<Program(name={self.name}, faculty_id={self.faculty_id})>"
@@ -31,7 +31,7 @@ class StudentClass(Base):
     __tablename__ = "student_classes"
     id = Column(Integer, primary_key=True, autoincrement=True)
     name: Mapped[str] = mapped_column(String(100))
-    program_id: Mapped[int] = mapped_column(ForeignKey("programs.id"))
+    program_id: Mapped[int] = mapped_column(Integer, index=True)
 
     def __repr__(self):
         return f"<StudentClass(name={self.name}, program_id={self.program_id})>"
@@ -41,10 +41,7 @@ class Student(Base):
     __tablename__ = "students"
     no: Mapped[str] = mapped_column(Integer, primary_key=True)
     name: Mapped[str] = mapped_column(String(100))
-    student_class_id: Mapped[int] = mapped_column(ForeignKey("student_classes.id"))
-    course_grades: Mapped[list["CourseGrade"]] = relationship(
-        primaryjoin="foreign(CourseGrade.student_no) == Student.no"
-    )
+    student_class_id: Mapped[int] = mapped_column(Integer, index=True)
 
     def __repr__(self):
         return f"<Student(name={self.name}, no={self.no}, student_class_id={self.student_class_id})>"
@@ -54,7 +51,7 @@ class FacultyRemarks(Base):
     __tablename__ = "faculty_remarks"
     id = Column(Integer, primary_key=True, autoincrement=True)
     remarks: Mapped[str] = mapped_column(Text, default="")
-    student_no: Mapped[int] = mapped_column(ForeignKey("students.no"))
+    student_no: Mapped[int] = mapped_column(Integer, index=True)
 
     def __repr__(self):
         return f"<FacultyRemarks(remarks={self.remarks}, student_no={self.student_no})>"
@@ -68,7 +65,7 @@ class CourseGrade(Base):
     grade: Mapped[str] = mapped_column(String(5))
     points: Mapped[float] = mapped_column(Float)
     marks: Mapped[float] = mapped_column(Float)
-    student_no: Mapped[int] = mapped_column(ForeignKey("students.no"))
+    student_no: Mapped[int] = mapped_column(Integer, index=True)
 
     def __init__(self, name, code, grade, points, marks, student_no):
         self.name = name

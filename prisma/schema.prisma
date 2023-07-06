@@ -8,67 +8,57 @@ datasource db {
 }
 
 model CourseGrade {
-  id         Int     @id @default(autoincrement())
-  name       String  @db.VarChar(100)
-  code       String  @db.VarChar(20)
-  grade      String  @db.VarChar(5)
-  points     Float   @db.Float
-  marks      Float   @db.Float
+  id         Int    @id @default(autoincrement())
+  name       String @db.VarChar(100)
+  code       String @db.VarChar(20)
+  grade      String @db.VarChar(5)
+  points     Float  @db.Float
+  marks      Float  @db.Float
   student_no Int
-  Student    Student @relation(fields: [student_no], references: [no], onDelete: NoAction, onUpdate: NoAction, map: "course_grades_ibfk_1")
 
-  @@index([student_no], map: "student_no")
+  @@index([student_no], map: "ix_course_grades_student_no")
   @@map("course_grades")
 }
 
 model Faculty {
-  id       Int       @id @default(autoincrement())
-  name     String    @db.VarChar(80)
-  programs Program[]
+  id   Int    @id @default(autoincrement())
+  name String @db.VarChar(80)
 
   @@map("faculties")
 }
 
 model Program {
-  id             Int            @id @default(autoincrement())
-  name           String         @db.VarChar(80)
-  faculty_id     Int
-  faculties      Faculty        @relation(fields: [faculty_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "programs_ibfk_1")
-  studentClasses StudentClass[]
+  id         Int    @id @default(autoincrement())
+  name       String @db.VarChar(80)
+  faculty_id Int
 
-  @@index([faculty_id], map: "faculty_id")
+  @@index([faculty_id], map: "ix_programs_faculty_id")
   @@map("programs")
 }
 
 model StudentClass {
-  id         Int       @id @default(autoincrement())
-  name       String    @db.VarChar(100)
+  id         Int    @id @default(autoincrement())
+  name       String @db.VarChar(100)
   program_id Int
-  program    Program   @relation(fields: [program_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "student_classes_ibfk_1")
-  students   Student[]
 
-  @@index([program_id], map: "program_id")
+  @@index([program_id], map: "ix_student_classes_program_id")
   @@map("student_classes")
 }
 
 model Student {
-  no               Int              @id @default(autoincrement())
-  name             String           @db.VarChar(100)
+  no               Int    @id @default(autoincrement())
+  name             String @db.VarChar(100)
   student_class_id Int
-  courseGrades     CourseGrade[]
-  facultyRemarks   FacultyRemarks[]
-  studentClasses   StudentClass     @relation(fields: [student_class_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "students_ibfk_1")
 
-  @@index([student_class_id], map: "student_class_id")
+  @@index([student_class_id], map: "ix_students_student_class_id")
   @@map("students")
 }
 
 model FacultyRemarks {
-  id         Int     @id @default(autoincrement())
-  remarks    String  @db.Text
+  id         Int    @id @default(autoincrement())
+  remarks    String @db.Text
   student_no Int
-  students   Student @relation(fields: [student_no], references: [no], onDelete: NoAction, onUpdate: NoAction, map: "faculty_remarks_ibfk_1")
 
-  @@index([student_no], map: "student_no")
+  @@index([student_no], map: "ix_faculty_remarks_student_no")
   @@map("faculty_remarks")
 }
