@@ -13,21 +13,12 @@ from openpyxl.worksheet.worksheet import Worksheet
 from rich import print
 from rich.console import Console
 from sqlalchemy.orm import SessionTransaction
+from utils import is_number
 
 console = Console()
 Base.metadata.create_all(engine)
 session = Session()
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-
-
-def is_number(s):
-    if type(s) == NoneType:
-        return False
-    try:
-        float(s)
-    except ValueError:
-        return False
-    return True
 
 
 def get_std_no_column(sheet: Worksheet):

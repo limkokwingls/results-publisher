@@ -13,25 +13,12 @@ from openpyxl.worksheet.worksheet import Worksheet
 from rich import print
 from rich.console import Console
 from sqlalchemy.orm import SessionTransaction
+from utils import is_number, to_float, to_int
 
 console = Console()
 Base.metadata.create_all(engine)
 session = Session()
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-
-
-def to_int(value):
-    return int(float(value))
-
-
-def is_number(s):
-    if type(s) == NoneType:
-        return False
-    try:
-        float(s)
-    except ValueError:
-        return False
-    return True
 
 
 def get_std_column(sheet: Worksheet):
@@ -122,9 +109,9 @@ def save_student_grades(sheet: Worksheet, student_class: StudentClass):
             grade_cell: Cell = sheet.cell(student_col, mark_col + 1)
             points_cell: Cell = sheet.cell(student_col, mark_col + 2)
             if is_number(marks_cell.value):
-                marks = float(str(marks_cell.value))
+                marks = to_float(marks_cell.value)
                 grade = str(grade_cell.value)
-                points = float(str(points_cell.value))
+                points = to_float(points_cell.value)
                 student = session.query(Student).filter_by(no=std.no).first()
                 if not student:
                     student = Student(
