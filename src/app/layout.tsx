@@ -28,6 +28,7 @@ export default function RootLayout({
             <Image alt='Logo' src='/logo.png' width={280} height={125} />
           </div>
           <ProgressProvider>{children}</ProgressProvider>
+          <footer className='mt-10'></footer>
         </main>
       </body>
     </html>
