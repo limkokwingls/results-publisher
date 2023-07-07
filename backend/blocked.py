@@ -48,7 +48,7 @@ def main():
         for i, num in enumerate(student_numbers):
             student = session.query(Student).filter_by(no=num).first()
             if student:
-                student.blocked = True
+                student.is_blocked = True
                 session.commit()
             print(f"{i + 1}/{len(student_numbers)}) {num} blocked")
     print("Done!")
