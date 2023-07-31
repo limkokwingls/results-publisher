@@ -55,15 +55,21 @@ def read_worksheet(sheet: Worksheet):
         for cell in row:
             if type(cell.value) is str and "module" in cell.value.lower():
                 course_name = cell.value
+                # remove "Module" or "MODULE" or "module" from course name
+                course_name = re.sub(r"module", "", course_name, flags=re.IGNORECASE)
+                course_name = re.sub(r":", "", course_name)
+                course_name = course_name.strip()
                 break
         # get first cell in row
         noValue = row[0].value
-        if is_number(noValue):
-            std_no = to_int(row[2].value)
+        if is_number(noValue) and row[2].value:
+            std_no = str(row[2].value)
+            # remove white spaces
+            std_no = re.sub(r"\s+", "", std_no)
             student = session.query(Student).filter_by(no=std_no).first()
             if not student:
                 student = Student(
-                    no=to_int(row[2].value),
+                    no=std_no,
                     name=row[1].value,
                     remarks=row[6].value,
                     student_class_id=-1,
@@ -73,11 +79,12 @@ def read_worksheet(sheet: Worksheet):
                 name=course_name,
                 code="",
                 grade=row[6].value,
-                points=to_float(0.0),
-                marks=to_float(row[5].value),
+                points="0.0",
+                marks=row[5].value,
                 student_no=student.no,
             )
             session.add(grades)
+            print(student, grades)
 
             session.commit()
 
