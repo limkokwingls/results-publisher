@@ -46,7 +46,7 @@ class Student(Base):
     is_blocked: Mapped[bool] = mapped_column(Integer, default=False)
 
     def __repr__(self):
-        return f"<Student(name={self.name}, no={self.no}, student_class_id={self.student_class_id})>"
+        return f"<Student(name={self.name}, no={self.no}, remarks={self.remarks})>"
 
 
 class CourseGrade(Base):
@@ -68,4 +68,4 @@ class CourseGrade(Base):
         self.student_no = student_no
 
     def __repr__(self):
-        return f"<CourseGrades(name='{self.name}', code={self.code}, grade={self.grade}, points={self.points}, marks={self.marks})>"
+        return f"<CourseGrades(name='{self.name}', code={self.code}, grade={self.grade}, points={self.points}, marks={self.marks}, student_no={self.student_no})>"
