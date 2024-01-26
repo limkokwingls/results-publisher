@@ -4,7 +4,7 @@ import Image from 'next/image';
 
 export default async function Home() {
   return (
-    <main className='container px-4 md:px-20 h-[80vh] flex items-center flex-col justify-center'>
+    <main className='px-4 md:px-20 h-[80vh] w-screen flex items-center flex-col justify-center'>
       <Link href='/'>
         <Image alt='Logo' src='/logo.png' width={280} height={125} />
       </Link>
