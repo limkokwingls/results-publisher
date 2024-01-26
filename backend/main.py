@@ -101,11 +101,12 @@ def get_students_with_rows(sheet: Worksheet) -> dict[int, Student]:
     return data
 
 
-def save_student_grades(sheet: Worksheet):
-    cred = credentials.Certificate("serviceAccountKey.json")
-    app = firebase_admin.initialize_app(cred)
-    db = firestore.client(app)
+cred = credentials.Certificate("serviceAccountKey.json")
+app = firebase_admin.initialize_app(cred)
+db = firestore.client(app)
 
+
+def save_student_grades(sheet: Worksheet):
     marks_dict = get_course_rows(sheet)
     students = get_students_with_rows(sheet)
     remarks_col = get_remarks_column(sheet)
