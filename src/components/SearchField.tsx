@@ -50,6 +50,9 @@ export default function SearchField() {
           Search
         </button>
       </div>
+      <p className='text-center mt-5 text-zinc-400 text-sm'>
+        Limkokwing Student Results
+      </p>
     </form>
   );
 }
