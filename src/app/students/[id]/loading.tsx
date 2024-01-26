@@ -1,6 +1,4 @@
-type Props = { params: { id: string } };
-
-export default function LoadingPage({ params }: Props) {
+export default function LoadingPage() {
   return (
     <div className='flex space-x-4 mt-10 border-zinc-700 p-5 rounded-lg border'>
       <div className='animate-pulse '>
