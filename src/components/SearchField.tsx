@@ -13,11 +13,11 @@ export default function SearchField() {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className='flex flex-col'>
       <div className='relative'>
         <div className='absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none'>
           <svg
-            className='w-4 h-4 text-gray-400'
+            className='w-3 h-3 text-zinc-500'
             aria-hidden='true'
             xmlns='http://www.w3.org/2000/svg'
             fill='none'
@@ -35,15 +35,17 @@ export default function SearchField() {
         <input
           type='search'
           id='default-search'
-          className='block w-full p-3 pl-10 text-sm border rounded-lg bg-inherit border-zinc-700 placeholder-gray-400 text-white focus:ring-gray-500 focus:border-gray-500'
+          className='block w-full p-3 pl-10 text-sm border rounded-full bg-inherit border-zinc-500 placeholder-zinc-400 text-white focus:ring-gray-500 focus:border-gray-500'
           placeholder='Student Number'
           value={studentNo}
           onChange={(e) => setStudentNo(e.target.value)}
           required
         />
+      </div>
+      <div className='flex justify-center mt-5'>
         <button
           type='submit'
-          className='text-white absolute right-1 bottom-1 top-1 bg-zinc-700 hover:bg-gray-700 focus:ring-4 font-medium rounded-lg text-sm px-4 py-2 '
+          className='text-white bg-zinc-700 hover:bg-gray-700 focus:ring-4 rounded-lg text-sm px-10 py-2 '
         >
           Search
         </button>
