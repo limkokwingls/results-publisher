@@ -72,7 +72,7 @@ async function GradesTable({ studentId }: { studentId: string }) {
         </thead>
         <tbody>
           {grades.map((grade) => (
-            <tr key={grade.id}>
+            <tr key={grade.code}>
               <td className='py-2 pe-4' scope='row'>
                 <p>{grade.name}</p>
                 <p className='text-xs text-zinc-400'>{grade.code}</p>
