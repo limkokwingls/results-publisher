@@ -45,7 +45,7 @@ export default function SearchField() {
       <div className='flex justify-center mt-5'>
         <button
           type='submit'
-          className='text-white bg-zinc-700 hover:bg-gray-700 focus:ring-4 rounded-lg text-sm px-10 py-2 '
+          className='text-white bg-zinc-700 border border-transparent hover:border-zinc-500 focus:ring-4 rounded-lg text-sm px-14 py-2 '
         >
           Search
         </button>
