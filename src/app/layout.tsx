@@ -1,13 +1,10 @@
-import ProgressProvider from '@/components/Providers';
 import './globals.css';
 import { Inter } from 'next/font/google';
-import Image from 'next/image';
-import Link from 'next/link';
 
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata = {
-  title: 'Results Publications | Limkokwing',
+  title: 'Student Results | Limkokwing',
   description:
     'Limkokwing University of Creative Technology, Results Publications',
 };
@@ -20,7 +17,7 @@ export default function RootLayout({
   return (
     <html lang='en'>
       <body className={inter.className}>
-        <ProgressProvider>{children}</ProgressProvider>
+        <>{children}</>
       </body>
     </html>
   );
