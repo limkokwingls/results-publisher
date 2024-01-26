@@ -21,11 +21,10 @@ export default function RootLayout({
     <html lang='en'>
       <body className={inter.className}>
         <main className='container mx-auto px-4 md:px-20'>
-          <h1 className='text-4xl font-bold text-zinc-300 text-center mt-14 mb-2'>
-            <Link href='/'>Student Results</Link>
-          </h1>
           <div className='flex justify-center'>
-            <Image alt='Logo' src='/logo.png' width={280} height={125} />
+            <Link href='/'>
+              <Image alt='Logo' src='/logo.png' width={280} height={125} />
+            </Link>
           </div>
           <ProgressProvider>{children}</ProgressProvider>
           <footer className='mt-10'></footer>
