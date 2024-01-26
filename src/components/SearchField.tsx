@@ -35,7 +35,7 @@ export default function SearchField() {
         <input
           type='search'
           id='default-search'
-          className='block w-full p-4 pl-10 text-sm border rounded-full bg-inherit border-zinc-500 placeholder-zinc-400 text-white focus:ring-gray-500 focus:border-gray-500'
+          className='block w-full p-4 pl-10 text-sm border rounded-full bg-inherit border-zinc-500 placeholder-zinc-400 text-white focus:ring-gray-500 focus:border-gray-500 focus:bg-zinc-800'
           placeholder='Student Number'
           value={studentNo}
           onChange={(e) => setStudentNo(e.target.value)}
