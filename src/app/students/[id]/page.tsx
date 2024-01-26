@@ -19,10 +19,11 @@ export default async function FacultyPage({ params }: Props) {
   }
 
   return (
-    <div className='mt-10 text-gray-200'>
+    <div className='mt-10 text-gray-200 p-5 rounded-lg border border-zinc-700'>
       <div>
         <h2 className='text-xl font-semibold'>{stdNo}</h2>
-        <div className='text-xs mt-2 px-2 py-4 bg-zinc-900  border border-zinc-800'>
+        <p className='text-sm text-zinc-400'>{student?.name}</p>
+        <div className='text-xs mt-2 px-2 py-4 bg-zinc-800  border border-zinc-700'>
           {student?.is_blocked ? (
             <span>Blocked</span>
           ) : (
