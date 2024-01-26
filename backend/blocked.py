@@ -1,8 +1,10 @@
 import os
 from types import NoneType
 
+import firebase_admin
 import openpyxl
 from base import Base, Session, engine
+from firebase_admin import credentials, firestore
 from models import CourseGrade, Faculty, Program, Student, StudentClass
 from openpyxl.cell.cell import Cell
 from openpyxl.styles import Alignment, Border, Font, PatternFill, Side
@@ -42,14 +44,16 @@ def get_student_numbers(sheet: Worksheet) -> list[str]:
 
 
 def main():
-    workbook: Workbook = openpyxl.load_workbook("blocked_list.xlsx")
+    cred = credentials.Certificate("serviceAccountKey.json")
+    app = firebase_admin.initialize_app(cred)
+    db = firestore.client(app)
+    workbook: Workbook = openpyxl.load_workbook("BLOCK LIST _JAN 2024.xlsx")
     for sheet in workbook:
         student_numbers = get_student_numbers(sheet)
         for i, num in enumerate(student_numbers):
-            student = session.query(Student).filter_by(no=num).first()
-            if student:
-                student.is_blocked = True
-                session.commit()
+            db.collection("students").document(str(num)).set(
+                {"is_blocked": True}, merge=True
+            )
             print(f"{i + 1}/{len(student_numbers)}) {num} blocked")
     print("Done!")
 
