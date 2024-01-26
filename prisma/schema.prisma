@@ -1,19 +1,22 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
 model CourseGrade {
-  id         Int    @id @default(autoincrement())
-  name       String @db.VarChar(100)
-  code       String @db.VarChar(20)
-  grade      String @db.VarChar(5)
-  points     Float  @db.Float
-  marks      Float  @db.Float
+  id         Int    @id
+  name       String
+  code       String
+  grade      String
+  points     Float
+  marks      Float
   student_no Int
 
   @@index([student_no], map: "ix_course_grades_student_no")
@@ -21,15 +24,15 @@ model CourseGrade {
 }
 
 model Faculty {
-  id   Int    @id @default(autoincrement())
-  name String @db.VarChar(80)
+  id   Int    @id
+  name String
 
   @@map("faculties")
 }
 
 model Program {
-  id         Int    @id @default(autoincrement())
-  name       String @db.VarChar(80)
+  id         Int    @id
+  name       String
   faculty_id Int
 
   @@index([faculty_id], map: "ix_programs_faculty_id")
@@ -37,8 +40,8 @@ model Program {
 }
 
 model StudentClass {
-  id         Int    @id @default(autoincrement())
-  name       String @db.VarChar(100)
+  id         Int    @id
+  name       String
   program_id Int
 
   @@index([program_id], map: "ix_student_classes_program_id")
@@ -47,9 +50,9 @@ model StudentClass {
 
 model Student {
   no               Int    @id @default(autoincrement())
-  name             String @db.VarChar(100)
+  name             String
   student_class_id Int
-  remarks          String @db.Text
+  remarks          String
   is_blocked       Int
 
   @@index([student_class_id], map: "ix_students_student_class_id")

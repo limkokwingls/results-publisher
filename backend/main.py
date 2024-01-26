@@ -1,8 +1,11 @@
 import os
+from dataclasses import asdict
 from types import NoneType
 
+import firebase_admin
 import openpyxl
 from base import Base, Session, engine
+from firebase_admin import credentials, firestore
 from models import CourseGrade, Faculty, Program, Student, StudentClass
 from openpyxl.cell.cell import Cell
 from openpyxl.styles import Alignment, Border, Font, PatternFill, Side
@@ -98,10 +101,16 @@ def get_students_with_rows(sheet: Worksheet) -> dict[int, Student]:
     return data
 
 
-def save_student_grades(sheet: Worksheet, student_class: StudentClass):
+def save_student_grades(sheet: Worksheet):
+    cred = credentials.Certificate("serviceAccountKey.json")
+    app = firebase_admin.initialize_app(cred)
+    db = firestore.client(app)
+
     marks_dict = get_course_rows(sheet)
     students = get_students_with_rows(sheet)
     remarks_col = get_remarks_column(sheet)
+
+    student_dict = {}
 
     for student_col, std in students.items():
         for mark_col, course in marks_dict.items():
@@ -112,15 +121,11 @@ def save_student_grades(sheet: Worksheet, student_class: StudentClass):
                 marks = to_float(marks_cell.value)
                 grade = str(grade_cell.value)
                 points = to_float(points_cell.value)
-                student = session.query(Student).filter_by(no=std.no).first()
+                student = student_dict.get(std.no)
                 if not student:
-                    student = Student(
-                        name=std.name,
-                        no=std.no,
-                        student_class_id=student_class.id,
-                    )
-                    session.add(student)
-                    session.commit()
+                    student = Student(name=std.name, no=std.no)
+                    db.collection("students").document(str(std.no)).set(asdict(student))
+                    student_dict[std.no] = student
 
                 course_grade = CourseGrade(
                     code=course["code"],
@@ -128,15 +133,17 @@ def save_student_grades(sheet: Worksheet, student_class: StudentClass):
                     marks=marks,
                     grade=grade,
                     points=points,
-                    student_no=student.no,
                 )
-                session.add(course_grade)
-                session.commit()
+                db.collection("students").document(str(std.no)).collection(
+                    "grades"
+                ).add(asdict(course_grade))
 
                 remarks_cell: Cell = sheet.cell(student_col, remarks_col)
                 if remarks_cell.value:
-                    student.remarks = str(remarks_cell.value)
-                session.commit()
+                    remarks = str(remarks_cell.value)
+                    db.collection("students").document(str(std.no)).update(
+                        {"remarks": remarks}
+                    )
 
 
 def create_student_class(sheet: Worksheet):
@@ -196,18 +203,18 @@ def get_data_files(dir: str):
     return files
 
 
-def delete_everything():
-    session.query(CourseGrade).delete()
-    session.query(Student).delete()
-    session.query(StudentClass).delete()
-    session.query(Program).delete()
-    session.query(Faculty).delete()
-    session.commit()
+# def delete_everything():
+#     session.query(CourseGrade).delete()
+#     session.query(Student).delete()
+#     session.query(StudentClass).delete()
+#     session.query(Program).delete()
+#     session.query(Faculty).delete()
+#     session.commit()
 
 
 def main():
-    with console.status("Clearing database..."):
-        delete_everything()
+    # with console.status("Clearing database..."):
+    #     delete_everything()
     files = get_data_files("data")
     for i, file in enumerate(files):
         file_name = file.split("\\")[-1]
@@ -219,8 +226,11 @@ def main():
                 f"{i + 1}/{len(workbook.worksheets)} Processing '{sheet.title}'..."
             ):
                 print(sheet.title)
-                student_class = create_student_class(sheet)
-                save_student_grades(sheet, student_class)
+                if sheet.title and "sheet" in sheet.title.lower():
+                    print(f"Skipping {sheet.title}...")
+                    continue
+                # student_class = create_student_class(sheet)
+                save_student_grades(sheet)
     print("Done!")
 
 

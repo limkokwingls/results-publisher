@@ -41,3 +41,5 @@ __pycache__/
 *.sql
 *.xlsx
 *.xls
+
+serviceAccountKey.json

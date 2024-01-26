@@ -1,8 +1,9 @@
 import re
+from dataclasses import dataclass
 from os import name
 
 from base import Base
-from sqlalchemy import Column, Float, ForeignKey, Integer, String, Text
+from sqlalchemy import Boolean, Column, Float, ForeignKey, Integer, String, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 
@@ -37,35 +38,24 @@ class StudentClass(Base):
         return f"<StudentClass(name={self.name}, program_id={self.program_id})>"
 
 
-class Student(Base):
-    __tablename__ = "students"
-    no: Mapped[str] = mapped_column(Integer, primary_key=True)
-    name: Mapped[str] = mapped_column(String(100))
-    student_class_id: Mapped[int] = mapped_column(Integer, index=True)
-    remarks: Mapped[str] = mapped_column(Text, default="")
-    is_blocked: Mapped[bool] = mapped_column(Integer, default=False)
+@dataclass
+class Student:
+    no: int
+    name: str
+    remarks: str = ""
+    is_blocked: bool = False
 
     def __repr__(self):
         return f"<Student(name={self.name}, no={self.no}, remarks={self.remarks})>"
 
 
-class CourseGrade(Base):
-    __tablename__ = "course_grades"
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    name: Mapped[str] = mapped_column(String(100))
-    code: Mapped[str] = mapped_column(String(20))
-    grade: Mapped[str] = mapped_column(String(5))
-    points: Mapped[float] = mapped_column(Float)
-    marks: Mapped[float] = mapped_column(Float)
-    student_no: Mapped[int] = mapped_column(Integer, index=True)
-
-    def __init__(self, name, code, grade, points, marks, student_no):
-        self.name = name
-        self.code = code
-        self.grade = grade
-        self.points = points
-        self.marks = marks
-        self.student_no = student_no
+@dataclass
+class CourseGrade:
+    name: str
+    code: str
+    grade: str
+    points: float
+    marks: float
 
     def __repr__(self):
-        return f"<CourseGrades(name='{self.name}', code={self.code}, grade={self.grade}, points={self.points}, marks={self.marks}, student_no={self.student_no})>"
+        return f"<CourseGrades(name='{self.name}', code={self.code}, grade={self.grade}, points={self.points}, marks={self.marks})>"
