@@ -1,5 +1,6 @@
 import { db } from '@/lib/firebase';
 import { collection, doc, getDoc, getDocs } from 'firebase/firestore';
+import { notFound } from 'next/navigation';
 
 type Props = { params: { id: string } };
 
@@ -23,6 +24,10 @@ export default async function FacultyPage({ params }: Props) {
   const student = (
     await getDoc(doc(db, 'students', params.id))
   ).data() as Student;
+
+  if (!student) {
+    return notFound();
+  }
 
   return (
     <div className='mt-10 text-gray-200 p-5 rounded-lg border border-zinc-700'>
