@@ -9,6 +9,7 @@ type Student = {
   name: string;
   is_blocked: boolean;
   remarks: string;
+  course_grades: Grade[];
 };
 
 type Grade = {
@@ -42,15 +43,12 @@ export default async function FacultyPage({ params }: Props) {
           )}
         </div>
       </div>
-      {!student?.is_blocked && <GradesTable studentId={params.id} />}
+      {!student?.is_blocked && <GradesTable grades={student.course_grades} />}
     </div>
   );
 }
 
-async function GradesTable({ studentId }: { studentId: string }) {
-  const items = await getDocs(collection(db, 'students', studentId, 'grades'));
-  const grades = items.docs.map((item) => item.data()) as Grade[];
-
+async function GradesTable({ grades }: { grades: Grade[] }) {
   return (
     <div className='relative overflow-x-auto mt-6'>
       <table className='w-full mt-5 text-sm text-left'>
