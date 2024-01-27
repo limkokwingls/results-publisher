@@ -5,7 +5,6 @@ import firebase_admin
 import openpyxl
 from base import Base, Session, engine
 from firebase_admin import credentials, firestore
-from models import CourseGrade, Faculty, Program, Student, StudentClass
 from openpyxl.cell.cell import Cell
 from openpyxl.styles import Alignment, Border, Font, PatternFill, Side
 from openpyxl.styles.colors import Color
