@@ -165,7 +165,7 @@ def get_data_files(dir: str):
 
 def main():
     files = get_data_files("data")
-    students = {}
+    students: dict[int, Student] = {}
     for i, file in enumerate(files):
         file_name = file.split("\\")[-1]
         print(f"{i+1}/{len(files)}) {file_name}")
@@ -180,7 +180,8 @@ def main():
                     print(f"Skipping {sheet.title}...")
                     continue
                 # student_class = create_student_class(sheet)
-                students = get_students_with_grades(sheet)
+                students.update(get_students_with_grades(sheet))
+
     save_to_firestore(students)
     print("Done!")
 
