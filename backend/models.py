@@ -1,10 +1,4 @@
-import re
 from dataclasses import dataclass, field
-from os import name
-
-from base import Base
-from sqlalchemy import Boolean, Column, Float, ForeignKey, Integer, String, Text
-from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 
 @dataclass
