@@ -6,9 +6,8 @@ import firebase_admin
 import openpyxl
 from base import Base, Session, engine
 from firebase_admin import credentials, firestore
-from models import CourseGrade, Faculty, Program, Student, StudentClass
+from models import CourseGrade, Student
 from openpyxl.cell.cell import Cell
-from openpyxl.styles import Alignment, Border, Font, PatternFill, Side
 from openpyxl.styles.colors import Color
 from openpyxl.utils.dataframe import dataframe_to_rows
 from openpyxl.workbook.workbook import Workbook
@@ -106,7 +105,16 @@ app = firebase_admin.initialize_app(cred)
 db = firestore.client(app)
 
 
-def save_student_grades(sheet: Worksheet):
+def save_to_firestore(students: dict[int, Student]):
+    print("Saving to database")
+    size = len(students)
+    for i, std in enumerate(students.values()):
+        print(f"{i+1}/{size} Saving {std.name}...")
+        std_ref = db.collection("students").document(str(std.no))
+        std_ref.set(asdict(std))
+
+
+def get_students_with_grades(sheet: Worksheet):
     marks_dict = get_course_rows(sheet)
     students = get_students_with_rows(sheet)
     remarks_col = get_remarks_column(sheet)
@@ -115,84 +123,35 @@ def save_student_grades(sheet: Worksheet):
 
     for student_col, std in students.items():
         for mark_col, course in marks_dict.items():
-            marks_cell: Cell = sheet.cell(student_col, mark_col)
-            grade_cell: Cell = sheet.cell(student_col, mark_col + 1)
-            points_cell: Cell = sheet.cell(student_col, mark_col + 2)
-            if is_number(marks_cell.value):
-                marks = to_float(marks_cell.value)
-                grade = str(grade_cell.value)
-                points = to_float(points_cell.value)
-                student = student_dict.get(std.no)
-                if not student:
-                    student = Student(name=std.name, no=std.no)
-                    db.collection("students").document(str(std.no)).set(asdict(student))
-                    student_dict[std.no] = student
+            try:
+                marks_cell: Cell = sheet.cell(student_col, mark_col)
+                grade_cell: Cell = sheet.cell(student_col, mark_col + 1)
+                points_cell: Cell = sheet.cell(student_col, mark_col + 2)
+                if is_number(marks_cell.value):
+                    marks = to_float(marks_cell.value)
+                    grade = str(grade_cell.value)
+                    points = to_float(points_cell.value)
+                    student = student_dict.get(std.no)
+                    if not student:
+                        student = Student(name=std.name, no=std.no)
+                        student_dict[std.no] = student
 
-                course_grade = CourseGrade(
-                    code=course["code"],
-                    name=course["name"],
-                    marks=marks,
-                    grade=grade,
-                    points=points,
-                )
-                db.collection("students").document(str(std.no)).collection(
-                    "grades"
-                ).add(asdict(course_grade))
-
-                remarks_cell: Cell = sheet.cell(student_col, remarks_col)
-                if remarks_cell.value:
-                    remarks = str(remarks_cell.value)
-                    db.collection("students").document(str(std.no)).update(
-                        {"remarks": remarks}
+                    course_grade = CourseGrade(
+                        code=course["code"],
+                        name=course["name"],
+                        marks=marks,
+                        grade=grade,
+                        points=points,
                     )
+                    student.course_grades.append(course_grade)
 
-
-def create_student_class(sheet: Worksheet):
-    faculty_name = ""
-    program_index = -1
-    class_index = -1
-    program_name, class_name = "", None
-    for i, row in enumerate(sheet.iter_rows()):
-        for _cell in row:
-            cell: Cell = _cell
-            if cell.data_type == "s" and "faculty of" in str(cell.value).lower():
-                program_index = i + 1
-                class_index = i + 5
-                faculty_name = str(cell.value)
-                program_row = list(sheet.iter_rows())[program_index]
-                program_name = str(program_row[0].value)
-
-                # if information is all in one cell
-                lines = str(cell.value).split("\n")
-                if len(lines) > 5:
-                    faculty_name = lines[1]
-                    program_name = lines[2]
-                    class_index = i + 1
-
-    class_row = list(sheet.iter_rows())[class_index]
-    class_name = str(class_row[0].value)
-
-    faculty = session.query(Faculty).filter_by(name=faculty_name).first()
-    if not faculty:
-        faculty = Faculty(name=faculty_name)
-        session.add(faculty)
-        session.commit()
-
-    # find program from database
-    program = session.query(Program).filter_by(name=program_name).first()
-    if not program:
-        program = Program(name=program_name, faculty_id=faculty.id)
-        session.add(program)
-        session.commit()
-
-    # find class from database
-    student_class = session.query(StudentClass).filter_by(name=class_name).first()
-    if not student_class:
-        student_class = StudentClass(name=class_name, program_id=program.id)
-        session.add(student_class)
-        session.commit()
-
-    return student_class
+                    remarks_cell: Cell = sheet.cell(student_col, remarks_col)
+                    if remarks_cell.value:
+                        remarks = str(remarks_cell.value)
+                        student.remarks = remarks
+            except Exception as e:
+                print(e)
+    return student_dict
 
 
 def get_data_files(dir: str):
@@ -204,19 +163,9 @@ def get_data_files(dir: str):
     return files
 
 
-# def delete_everything():
-#     session.query(CourseGrade).delete()
-#     session.query(Student).delete()
-#     session.query(StudentClass).delete()
-#     session.query(Program).delete()
-#     session.query(Faculty).delete()
-#     session.commit()
-
-
 def main():
-    # with console.status("Clearing database..."):
-    #     delete_everything()
     files = get_data_files("data")
+    students = {}
     for i, file in enumerate(files):
         file_name = file.split("\\")[-1]
         print(f"{i+1}/{len(files)}) {file_name}")
@@ -231,7 +180,8 @@ def main():
                     print(f"Skipping {sheet.title}...")
                     continue
                 # student_class = create_student_class(sheet)
-                save_student_grades(sheet)
+                students = get_students_with_grades(sheet)
+    save_to_firestore(students)
     print("Done!")
 
 
