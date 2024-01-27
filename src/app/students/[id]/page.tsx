@@ -53,17 +53,17 @@ async function GradesTable({ grades }: { grades: Grade[] }) {
     <div className='relative overflow-x-auto mt-6'>
       <table className='w-full mt-5 text-sm text-left'>
         <thead className='border-b border-gray-400 font-semibold tracking-wider '>
-          <tr>
-            <th scope='col' className='pb-3 text-left'>
+          <tr className='text-xs sm:text-sm'>
+            <th scope='col' className='pb-3 text-left text-sm'>
               Course
             </th>
-            <th scope='col' className='pb-3 text-left'>
+            <th scope='col' className='pb-3 text-right sm:text-left'>
               Grade
             </th>
-            <th scope='col' className='pb-3 text-left'>
+            <th scope='col' className='pb-3 text-right sm:text-left'>
               Marks
             </th>
-            <th scope='col' className='pb-3 text-left'>
+            <th scope='col' className='pb-3 text-right sm:text-left'>
               Points
             </th>
           </tr>
