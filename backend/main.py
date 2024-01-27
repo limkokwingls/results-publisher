@@ -1,6 +1,5 @@
 import os
 from dataclasses import asdict
-from types import NoneType
 
 import firebase_admin
 import openpyxl
@@ -8,14 +7,11 @@ from base import Base, Session, engine
 from firebase_admin import credentials, firestore
 from models import CourseGrade, Student
 from openpyxl.cell.cell import Cell
-from openpyxl.styles.colors import Color
-from openpyxl.utils.dataframe import dataframe_to_rows
 from openpyxl.workbook.workbook import Workbook
 from openpyxl.worksheet.worksheet import Worksheet
 from rich import print
 from rich.console import Console
-from sqlalchemy.orm import SessionTransaction
-from utils import is_number, to_float, to_int
+from utils import is_number, to_float
 
 console = Console()
 Base.metadata.create_all(engine)
