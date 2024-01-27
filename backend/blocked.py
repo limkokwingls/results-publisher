@@ -2,7 +2,6 @@ import os
 
 import firebase_admin
 import openpyxl
-from base import Base, Session, engine
 from firebase_admin import credentials, firestore
 from openpyxl.cell.cell import Cell
 from openpyxl.workbook.workbook import Workbook
@@ -12,8 +11,6 @@ from rich.console import Console
 from utils import is_number
 
 console = Console()
-Base.metadata.create_all(engine)
-session = Session()
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 

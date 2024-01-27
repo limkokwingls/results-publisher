@@ -3,7 +3,6 @@ from dataclasses import asdict
 
 import firebase_admin
 import openpyxl
-from base import Base, Session, engine
 from firebase_admin import credentials, firestore
 from models import CourseGrade, Student
 from openpyxl.cell.cell import Cell
@@ -14,8 +13,6 @@ from rich.console import Console
 from utils import is_number, to_float
 
 console = Console()
-Base.metadata.create_all(engine)
-session = Session()
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 
@@ -105,8 +102,8 @@ def save_to_firestore(students: dict[int, Student]):
     print("Saving to database")
     size = len(students)
     for i, std in enumerate(students.values()):
-        print(f"{i+1}/{size} Saving {std.name}...")
-        std_ref = db.collection("students").document(str(std.no))
+        print(f"{i+1}/{size} Saving {std.name} ({std.no})...")
+        std_ref = db.collection("students").document(str(int(std.no)))
         std_ref.set(asdict(std))
 
 
@@ -129,7 +126,7 @@ def get_students_with_grades(sheet: Worksheet):
                     points = to_float(points_cell.value)
                     student = student_dict.get(std.no)
                     if not student:
-                        student = Student(name=std.name, no=std.no)
+                        student = Student(name=std.name, no=int(std.no))
                         student_dict[std.no] = student
 
                     course_grade = CourseGrade(
