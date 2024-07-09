@@ -18,29 +18,38 @@ def get_std_no_column(sheet: Worksheet):
     for col in sheet.iter_cols():
         for c in col:
             cell: Cell = c
-            if cell.value == "Student ID":
-                return cell.column
-    return 3
+            if "Student ID" in str(cell.value):
+                return cell.column - 1
+    return 1
 
 
 def get_student_numbers(sheet: Worksheet) -> list[str]:
     student_numbers = []
     col_number = get_std_no_column(sheet)
+    print("Reading Sheet ", sheet.title, "Column Number: ", col_number)
     for row in sheet.iter_rows():
         cell: Cell = row[col_number]
         if is_number(cell.value):
-            student_numbers.append(cell.value)
+            student_numbers.append(as_str(cell.value))
 
     return student_numbers
+
+
+def as_str(value) -> str:
+    val = str(value).strip()
+    if val.endswith(".0"):
+        return val[:-2]
+    return val
 
 
 def main():
     cred = credentials.Certificate("serviceAccountKey.json")
     app = firebase_admin.initialize_app(cred)
     db = firestore.client(app)
-    workbook: Workbook = openpyxl.load_workbook("BLOCK LIST _JAN 2024.xlsx")
+    workbook: Workbook = openpyxl.load_workbook("Blocked.xlsx")
     for sheet in workbook:
         student_numbers = get_student_numbers(sheet)
+        print(student_numbers)
         for i, num in enumerate(student_numbers):
             db.collection("students").document(str(num)).set(
                 {"is_blocked": True}, merge=True
