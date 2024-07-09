@@ -42,19 +42,25 @@ def as_str(value) -> str:
     return val
 
 
+def get_blocked_students():
+    students = []
+    workbook: Workbook = openpyxl.load_workbook("Blocked.xlsx")
+    for sheet in workbook:
+        student_numbers = get_student_numbers(sheet)
+        students.extend(student_numbers)
+    return students
+
+
 def main():
     cred = credentials.Certificate("serviceAccountKey.json")
     app = firebase_admin.initialize_app(cred)
     db = firestore.client(app)
-    workbook: Workbook = openpyxl.load_workbook("Blocked.xlsx")
-    for sheet in workbook:
-        student_numbers = get_student_numbers(sheet)
-        print(student_numbers)
-        for i, num in enumerate(student_numbers):
-            db.collection("students").document(str(num)).set(
-                {"is_blocked": True}, merge=True
-            )
-            print(f"{i + 1}/{len(student_numbers)}) {num} blocked")
+    student_numbers = get_blocked_students()
+    for i, num in enumerate(student_numbers):
+        db.collection("students").document(str(num)).set(
+            {"is_blocked": True}, merge=True
+        )
+        print(f"{i + 1}/{len(student_numbers)}) {num} blocked")
     print("Done!")
 
 
