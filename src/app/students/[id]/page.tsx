@@ -37,7 +37,7 @@ export default async function FacultyPage({ params }: Props) {
         <p className='text-sm text-zinc-400'>{student?.name}</p>
         <div className='text-xs mt-2 px-2 py-4 bg-zinc-800  border border-zinc-700'>
           {student?.is_blocked ? (
-            <span>Blocked</span>
+            <span>Blocked! Please consult Finance Department</span>
           ) : (
             <span>{student?.remarks || 'No Remarks'}</span>
           )}
