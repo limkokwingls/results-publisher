@@ -50,7 +50,9 @@ export default function SearchField() {
           Search
         </button>
       </div>
-      {/* <p className='text-center mt-5 text-zinc-400 text-sm'>Student Results</p> */}
+      <p className='text-center mt-5 text-zinc-400 text-sm'>
+        2024-02 Student Results
+      </p>
     </form>
   );
 }
