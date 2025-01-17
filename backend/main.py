@@ -143,7 +143,11 @@ def get_students_with_grades(sheet: Worksheet):
                         remarks = str(remarks_cell.value)
                         student.remarks = remarks
             except Exception as e:
-                print(e)
+                console.print(
+                    f"Error in Sheet: '{sheet.title}' at row {student_col}, column {mark_col}",
+                    style="bold red",
+                )
+                console.print(f"[red]{str(e)}[/red]")
     return student_dict
 
 
@@ -175,7 +179,7 @@ def main():
                 # student_class = create_student_class(sheet)
                 students.update(get_students_with_grades(sheet))
 
-    save_to_firestore(students)
+    # save_to_firestore(students)
     print("Done!")
 
 
