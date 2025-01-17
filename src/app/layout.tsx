@@ -14,6 +14,7 @@ export const metadata: Metadata = {
   title: 'Student Results | Limkokwing University Lesotho',
   description:
     'Limkokwing University of Creative Technology - Lesotho Campus, Official Results Publication Portal',
+  metadataBase: new URL('https://resultsonline.vercel.app'),
   applicationName: 'Limkokwing Results Portal',
   authors: [{ name: 'Registry Department, Limkokwing Lesotho' }],
   openGraph: {
@@ -31,14 +32,6 @@ export const metadata: Metadata = {
     ],
     locale: 'en_LS',
     siteName: 'Limkokwing University Lesotho',
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'Student Results | Limkokwing University Lesotho',
-    description:
-      'Limkokwing University of Creative Technology - Lesotho Campus, Official Results Publication Portal',
-    images: ['/logo_original.png'],
-    creator: '@LimkokwingLS',
   },
 };
 
