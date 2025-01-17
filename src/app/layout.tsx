@@ -22,7 +22,7 @@ export const metadata: Metadata = {
     type: 'website',
     images: [
       {
-        url: '/logo.png',
+        url: '/logo_original.png',
         width: 1200,
         height: 630,
         alt: 'Limkokwing University Lesotho Logo',
@@ -36,7 +36,7 @@ export const metadata: Metadata = {
     title: 'Student Results | Limkokwing University Lesotho',
     description:
       'Limkokwing University of Creative Technology - Lesotho Campus, Official Results Publication Portal',
-    images: ['/logo.png'],
+    images: ['/logo_original.png'],
     creator: '@LimkokwingLS',
   },
 };
