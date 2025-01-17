@@ -179,7 +179,7 @@ def main():
                 # student_class = create_student_class(sheet)
                 students.update(get_students_with_grades(sheet))
 
-    # save_to_firestore(students)
+    save_to_firestore(students)
     print("Done!")
 
 
