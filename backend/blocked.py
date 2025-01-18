@@ -1,14 +1,13 @@
 import os
 
-import firebase_admin
 import openpyxl
-from firebase_admin import credentials, firestore
 from openpyxl.cell.cell import Cell
 from openpyxl.workbook.workbook import Workbook
 from openpyxl.worksheet.worksheet import Worksheet
 from rich import print
 from rich.console import Console
 from utils import is_number
+from db import get_db, cleanup_db
 
 console = Console()
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -51,10 +50,16 @@ def get_blocked_students():
     return students
 
 
-def main():
-    cred = credentials.Certificate("serviceAccountKey.json")
-    app = firebase_admin.initialize_app(cred)
-    db = firestore.client(app)
+def unblock(student_number: str) -> None:
+    app, db = get_db()
+    db.collection("students").document(str(student_number)).set(
+        {"is_blocked": False}, merge=True
+    )
+    cleanup_db(app)
+
+
+def main() -> None:
+    app, db = get_db()
     student_numbers = get_blocked_students()
     for i, num in enumerate(student_numbers):
         db.collection("students").document(str(num)).set(
@@ -62,6 +67,7 @@ def main():
         )
         print(f"{i + 1}/{len(student_numbers)}) {num} blocked")
     print("Done!")
+    cleanup_db(app)
 
 
 if __name__ == "__main__":
