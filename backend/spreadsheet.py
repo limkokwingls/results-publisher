@@ -74,8 +74,6 @@ def mark_as_unblocked(
             valueInputOption='RAW',
             body=body
         ).execute()
-        
-        print(f"Successfully marked student {student_number} as Unblocked.")
         return True
         
     except Exception as e:

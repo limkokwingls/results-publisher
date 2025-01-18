@@ -43,3 +43,5 @@ __pycache__/
 *.xls
 
 serviceAccountKey.json
+/backend/build
+/backend/dist
