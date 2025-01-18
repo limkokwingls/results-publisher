@@ -6,11 +6,11 @@ import pandas as pd
 CREDENTIALS_PATH: str = 'serviceAccountKey.json'
 SPREADSHEET_ID: str = '1wBvea_dvs18fMmIH75bIhiZPKHKO_skkHjv3yhCp-NE'
 
-def get_google_sheets_service(credentials_path: str) -> Resource:
+def get_google_sheets_service() -> Resource:
     SCOPES: List[str] = ['https://www.googleapis.com/auth/spreadsheets']
     
     credentials: Credentials = Credentials.from_service_account_file(
-        credentials_path, 
+        CREDENTIALS_PATH, 
         scopes=SCOPES
     )
     
@@ -52,7 +52,7 @@ def find_student_row(
     
     return None
 
-def mark_as_done(
+def mark_as_unblocked(
     service: Resource,
     student_number: str
 ) -> bool:
@@ -128,7 +128,7 @@ def get_blocked_students(service: Resource) -> List[str]:
 
 def main() -> None:
     try:
-        service: Resource = get_google_sheets_service(CREDENTIALS_PATH)
+        service: Resource = get_google_sheets_service()
         # student_numbers: List[str] = extract_student_numbers(service)
         print(get_blocked_students(service))
         # print("Extracted Student Numbers:")

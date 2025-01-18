@@ -50,14 +50,6 @@ def get_blocked_students():
     return students
 
 
-def unblock(student_number: str) -> None:
-    app, db = get_db()
-    db.collection("students").document(str(student_number)).set(
-        {"is_blocked": False}, merge=True
-    )
-    cleanup_db(app)
-
-
 def main() -> None:
     app, db = get_db()
     student_numbers = get_blocked_students()
