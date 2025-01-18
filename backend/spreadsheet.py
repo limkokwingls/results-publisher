@@ -103,11 +103,34 @@ def get_student_status(
         print(f"An error occurred: {str(e)}")
         return None
 
+def get_blocked_students(service: Resource) -> List[str]:
+    try:
+        range_name: str = 'Sheet1!A3:D'
+        result = service.spreadsheets().values().get(
+            spreadsheetId=SPREADSHEET_ID,
+            range=range_name
+        ).execute()
+        values = result.get('values', [])
+        blocked_students: List[str] = []
+        for row in values:
+            if len(row) >= 4:
+                student_number = row[0]
+                status = row[3].lower() if len(row) > 3 and row[3] else ""
+                
+                if status != "unblocked":
+                    blocked_students.append(student_number)
+            else:
+                blocked_students.append(row[0])
+        return blocked_students
+    except Exception as e:
+        print(f"An error occurred: {str(e)}")
+        return []
+
 def main() -> None:
     try:
         service: Resource = get_google_sheets_service(CREDENTIALS_PATH)
         # student_numbers: List[str] = extract_student_numbers(service)
-        print(get_student_status(service, '901015906'))
+        print(get_blocked_students(service))
         # print("Extracted Student Numbers:")
         # for number in student_numbers:
         #     print(number)
