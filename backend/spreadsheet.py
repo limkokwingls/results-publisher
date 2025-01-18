@@ -82,12 +82,33 @@ def mark_as_done(
         print(f"An error occurred: {str(e)}")
         return False
 
+
+def get_student_status(
+    service: Resource,
+    student_number: str
+) -> Optional[str]:
+    try:
+        row_number: Optional[int] = find_student_row(service, SPREADSHEET_ID, student_number)
+        if row_number is None:
+            print(f"Student number {student_number} not found.")
+            return None
+        range_name: str = f'Sheet1!D{row_number}'
+        result = service.spreadsheets().values().get(
+            spreadsheetId=SPREADSHEET_ID,
+            range=range_name
+        ).execute()
+        values = result.get('values', [])
+        return values[0][0] if values and values[0] else None
+    except Exception as e:
+        print(f"An error occurred: {str(e)}")
+        return None
+
 def main() -> None:
     try:
         service: Resource = get_google_sheets_service(CREDENTIALS_PATH)
         # student_numbers: List[str] = extract_student_numbers(service)
-        mark_as_done(service, '901015906')
-        print("Extracted Student Numbers:")
+        print(get_student_status(service, '901015906'))
+        # print("Extracted Student Numbers:")
         # for number in student_numbers:
         #     print(number)
     except Exception as e:
