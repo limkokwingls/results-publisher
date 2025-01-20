@@ -5,7 +5,7 @@ a = Analysis(
     ['unblock.py'],
     pathex=[],
     binaries=[],
-    datas=[],
+    datas=[('serviceAccountKey.json', '.')],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},

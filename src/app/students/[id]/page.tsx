@@ -1,5 +1,5 @@
 import { db } from '@/lib/firebase';
-import { collection, doc, getDoc, getDocs } from 'firebase/firestore';
+import { doc, getDoc } from 'firebase/firestore';
 import { notFound } from 'next/navigation';
 
 type Props = { params: { id: string } };
@@ -9,7 +9,7 @@ type Student = {
   name: string;
   is_blocked: boolean;
   remarks: string;
-  course_grades: Grade[];
+  course_grades?: Grade[];
 };
 
 type Grade = {
@@ -48,7 +48,7 @@ export default async function FacultyPage({ params }: Props) {
   );
 }
 
-async function GradesTable({ grades }: { grades: Grade[] }) {
+async function GradesTable({ grades }: { grades?: Grade[] }) {
   return (
     <div className='relative overflow-x-auto mt-6'>
       <table className='w-full mt-5 text-sm text-left'>
@@ -69,7 +69,7 @@ async function GradesTable({ grades }: { grades: Grade[] }) {
           </tr>
         </thead>
         <tbody>
-          {grades.map((grade) => (
+          {grades?.map((grade) => (
             <tr key={grade.code}>
               <td className='py-2 pe-4' scope='row'>
                 <p>{grade.name}</p>
