@@ -1,4 +1,5 @@
 import os
+import time
 from typing import List, NoReturn
 
 from db import cleanup_db, get_db
@@ -10,7 +11,6 @@ from spreadsheet import (
     get_google_sheets_service,
     mark_as_unblocked,
 )
-from tqdm import tqdm
 
 
 def unblock(student_number: str) -> None:
@@ -23,24 +23,34 @@ def unblock(student_number: str) -> None:
 
 def main():
     """Unblock students and update their status in both database and spreadsheet."""
-    try:
-        print("Initializing...")
-        service = get_google_sheets_service()
-        blocked_students = get_blocked_students(service)
+    while True:
+        try:
+            print("\nChecking for blocked students...")
+            service = get_google_sheets_service()
+            blocked_students = get_blocked_students(service)
 
-        if not blocked_students:
-            print("No blocked students found.")
-        else:
-            print(f"Found {len(blocked_students)} blocked students.")
-            for student in tqdm(blocked_students, desc="Unblocking students"):
-                unblock(student.strip())
-                mark_as_unblocked(service, student)
-            print("\nDone!")
-    except Exception as e:
-        print(f"An error occurred: {str(e)}")
+            if not blocked_students:
+                print("No blocked students found.")
+            else:
+                print(f"Found {len(blocked_students)} blocked students.")
+                for student in blocked_students:
+                    if len(student.strip()) == 9 and student.isdigit():
+                        print(f"Unblocking: {student}")
+                        unblock(student.strip())
+                        mark_as_unblocked(service, student)
+                    else:
+                        print(
+                            "Invalid Student Number: '{student}'",
+                        )
+        except Exception as e:
+            print(f"An error occurred: {str(e)}")
 
-    os.system("pause")
+        print("Waiting 30 seconds before next check...")
+        time.sleep(30)
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except KeyboardInterrupt:
+        print("\nScript terminated by user.")
