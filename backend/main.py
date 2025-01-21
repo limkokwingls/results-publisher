@@ -10,7 +10,7 @@ from openpyxl.workbook.workbook import Workbook
 from openpyxl.worksheet.worksheet import Worksheet
 from rich import print
 from rich.console import Console
-from utils import is_number, to_float
+from utils import get_column_letter, is_number, to_float
 
 console = Console()
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -114,12 +114,12 @@ def get_students_with_grades(sheet: Worksheet):
 
     student_dict = {}
 
-    for student_col, std in students.items():
+    for student_row, std in students.items():
         for mark_col, course in marks_dict.items():
             try:
-                marks_cell: Cell = sheet.cell(student_col, mark_col)
-                grade_cell: Cell = sheet.cell(student_col, mark_col + 1)
-                points_cell: Cell = sheet.cell(student_col, mark_col + 2)
+                marks_cell: Cell = sheet.cell(student_row, mark_col)
+                grade_cell: Cell = sheet.cell(student_row, mark_col + 1)
+                points_cell: Cell = sheet.cell(student_row, mark_col + 2)
                 if is_number(marks_cell.value):
                     marks = to_float(marks_cell.value)
                     grade = str(grade_cell.value)
@@ -138,13 +138,13 @@ def get_students_with_grades(sheet: Worksheet):
                     )
                     student.course_grades.append(course_grade)
 
-                    remarks_cell: Cell = sheet.cell(student_col, remarks_col)
+                    remarks_cell: Cell = sheet.cell(student_row, remarks_col)
                     if remarks_cell.value:
                         remarks = str(remarks_cell.value)
                         student.remarks = remarks
             except Exception as e:
                 console.print(
-                    f"Error in Sheet: '{sheet.title}' at row {student_col}, column {mark_col}",
+                    f"Error in Sheet: '{sheet.title}' at cell {get_column_letter(mark_col)}{student_row}",
                     style="bold red",
                 )
                 console.print(f"[red]{str(e)}[/red]")

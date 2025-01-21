@@ -23,3 +23,13 @@ def is_number(s):
     except ValueError:
         return False
     return True
+
+
+def get_column_letter(column_number: int) -> str:
+    result: str = ""
+    while column_number > 0:
+        column_number -= 1
+        remainder: int = column_number % 26
+        result = chr(65 + remainder) + result
+        column_number //= 26
+    return result
