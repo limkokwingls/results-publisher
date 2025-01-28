@@ -33,8 +33,16 @@ export default async function FacultyPage({ params }: Props) {
   return (
     <div className='mt-10 text-gray-200 p-5 rounded-lg border border-zinc-700'>
       <div>
-        <h2 className='text-xl font-semibold'>{params.id}</h2>
-        <p className='text-sm text-zinc-400'>{student?.name}</p>
+        <div className='flex items-center justify-between'>
+          <div>
+            <h2 className='text-xl font-semibold'>{params.id}</h2>
+            <p className='text-sm text-zinc-400'>{student?.name}</p>
+          </div>
+          <div>
+            <p className='text-xl font-semibold'>2024-08</p>
+            <p className='text-sm text-zinc-400'>Semester</p>
+          </div>
+        </div>
         <div className='text-xs mt-2 px-2 py-4 bg-zinc-800  border border-zinc-700'>
           {student?.is_blocked ? (
             <span>Blocked! Please consult Finance Department</span>
