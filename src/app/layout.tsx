@@ -44,7 +44,9 @@ export default function RootLayout({ children }: RootLayoutProps) {
     <html lang='en' className={inter.variable}>
       <body className={inter.className}>
         <main className='min-h-[92vh]'>{children}</main>
-        <Footer />
+        <div className='screen-only'>
+          <Footer />
+        </div>
       </body>
     </html>
   );

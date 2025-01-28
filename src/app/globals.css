@@ -12,3 +12,28 @@ input:-webkit-autofill:focus {
     background-color 0s 600000s,
     color 0s 600000s;
 }
+
+/* Print and screen-specific styles */
+@media print {
+  .screen-only {
+    display: none !important;
+  }
+  
+  .print-only {
+    display: block !important;
+  }
+  
+  body {
+    background: white;
+  }
+}
+
+@media screen {
+  .print-only {
+    display: none !important;
+  }
+  
+  .screen-only {
+    display: block !important;
+  }
+}
