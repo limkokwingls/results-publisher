@@ -45,3 +45,4 @@ __pycache__/
 serviceAccountKey.json
 /backend/build
 /backend/dist
+/backend/remain_students.csv
